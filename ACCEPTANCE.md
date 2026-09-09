@@ -1,6 +1,6 @@
 # 漫画IF线验收记录
 
-当前整体状态：尚未 Done，且不具备 Release 就绪条件。漫画IF线新名称 production 已 Ready；永久 project domain 配置后由主 Agent 独立复核匿名公网 GET 为 PASS：HTTP 200、最终 URI 仍为 `https://comic-if-line.vercel.app/`、HTML title 为“漫画IF线”、包含产品名称且不是 Vercel 登录页。D047 production 输入门禁 PASS；D048 由 Luna Max 子 Agent 在隔离 Chromium 中执行同一条真实 production 页面序列，主 Agent 复核证据，最终从输入走通 analyze、事实确认、branches 到六格 storyboard。D049 又完成一条从初始页到六格及合规摘要的单一连续真实 production 录屏，录屏交付这一项可标为本地 `PASS`，但多次模型/输出失败、语义映射纠偏和单次样本边界仍不支持稳定性或 Release 声明；原核心路径演示 Release 经用户审核不合格已删除，原视频不再作为有效交付证据，未创建新 Release 或上传 D049 视频。
+当前整体状态：尚未 Done，且不具备 Release 就绪条件。漫画IF线新名称 production 已 Ready；永久 project domain 配置后由主 Agent 独立复核匿名公网 GET 为 PASS：HTTP 200、最终 URI 仍为 `https://comic-if-line.vercel.app/`、HTML title 为“漫画IF线”、包含产品名称且不是 Vercel 登录页。D047 production 输入门禁 PASS；D048 由 Luna Max 子 Agent 在隔离 Chromium 中执行同一条真实 production 页面序列，主 Agent 复核证据，最终从输入走通 analyze、事实确认、branches 到六格 storyboard。D049 又完成一条从初始页到六格及合规摘要的单一连续真实 production 录屏；D050 完成 branches 长尾失败的最小可靠性修复并部署，D051 在新可见隔离窗口中再次完整走通人工审核路径。录屏/本地页面链路与本次窗口可标为局部 `PASS`，但多次模型/输出失败、critic retry 余量很紧、q1 自动化措辞瑕疵和单次样本边界仍不支持稳定性或 Release 声明；原核心路径演示 Release 经用户审核不合格已删除，未创建新 Release 或上传视频。
 
 - 验收开始：`2026-09-09 03:57:41 +08:00`
 - 初始收口记录时刻：`2026-09-09 08:48:25 +08:00`
@@ -73,7 +73,30 @@
 
 本轮及前置录制尝试没有被拼接为成功：Chromium 初始自动化失败；旧 ffmpeg `gdigrab/draw_mouse` 不支持；脚本错误地要求 0 questions 时必须出现 `#questions-title`；`/api/branches` 曾在约 216055ms 返回 502；deliberate re-analyze 曾返回 `MODEL_OUTPUT_INVALID`/502（request `req_c9d5e9ac-bb13-4881-8f22-be74d0c105b9`）；宽泛死亡正则曾把时间跨度等非核心问题误答为死亡许可；遗憾中的“突然腰斩/缺少铺垫”曾被误当作必须保留的原作事实并造成冲突；低码率 MP4 通过解码却因画面糊被拒绝。最终在明确派生 must-have 后才形成上述成功序列，并完成 HQ 重编码和视频帧复核。
 
-本条把“<=5 分钟完整端到端录屏”标为本地 `PASS`，不把它扩大为稳定性 PASS。多次模型/结构输出失败说明整体尚未 Done；Spec 中“遗憾描述的负面属性是 change target、不能默认成为 canon fact”的语义保证是已发现但尚未实现的实现缺口。旧不合格 Release 已删除；D049 视频只在仓库外本地保存，不创建 Release、不上传，整体与 Release 就绪状态仍为 `NOT_DONE`。
+本条把“<=5 分钟完整端到端录屏”标为本地 `PASS`，不把它扩大为稳定性 PASS。多次模型/结构输出失败说明整体尚未 Done；Spec 中“遗憾描述的负面属性是 change target、不能默认成为 canon fact”的语义规则已由 D050 做 prompt 级实现，并在 D051 单样本中生效，但确定性与泛化仍待多样本验收。旧不合格 Release 已删除；D049 视频只在仓库外本地保存，不创建 Release、不上传，整体与 Release 就绪状态仍为 `NOT_DONE`。
+
+## D050 可靠性修复、部署与根因边界
+
+| 验收项 | 状态 | 证据/说明 |
+| --- | --- | --- |
+| 旧 branches 失败事实 | FAIL（历史保留） | `/api/branches` request `req_bcb11188-a3e8-45a8-866e-b4ed02b8bfdb` 约 285712ms 返回 HTTP 500；Vercel 交叉证据确认 generator 已完成，失败发生在后续并行 critic 阶段贴近 285s route deadline。后来旧部署同输入有 branches 200/116026ms，因此不把它归因为输入必错。 |
+| 根因结论边界 | PARTIAL | deadline-adjacent connection/timeout 异常此前被归一为 `INTERNAL_ERROR` 是基于错误形态的推断；Vercel 日志没有给出足够 cause，不能写成已确证的具体网络错误。 |
+| 最小修复 commit | PASS | `fbbcb26d5f702c8d9a68d62487927ec375bf8bbb`；保留 285s route、5 skeleton、双 critic、Schema、公共 API 和质量链；首轮 `Promise.allSettled`，成功 critic 复用，失败且可重试批次各重试一次；75s retry reserve、首轮最小 30s，最多 6 次模型调用；扩展 timeout-like/due-deadline 映射与安全日志；analyze prompt 加入遗憾属性 change-target 语义规则。 |
+| 本地代码检查 | PASS | `npm run eval` 8/8、`npm run lint`、`npm run build`、`git diff --check` 均 PASS；提交仅含四个批准代码/测试文件。 |
+| production 部署 | PASS | Vercel deployment `HpWyeHMk7eSKFjv9NTn9uEni3Ntq` 对应 commit `fbbcb26d5f702c8d9a68d62487927ec375bf8bbb`，GitHub/Vercel 状态为成功；未创建 Release。 |
+
+## D051 新可见隔离窗口人工审核
+
+| 验收项 | 状态 | 证据/说明 |
+| --- | --- | --- |
+| 新窗口与隔离边界 | PASS | run `manual-review-jujutsu-final-2026-09-09T17-10-14-172Z`；Chromium PID `92972`、driver PID `89256`；先确认新窗口可控后关闭旧临时 PID `91316/87988`；未复用用户浏览器，最终窗口保持打开供人工审核。 |
+| 页面 API 连续序列 | PASS | initial analyze 200/58265ms（5 facts/2 questions/0 conflicts）；re-analyze 200/57966ms（6 facts/0 questions/0 conflicts）；branches 页面 200/285285ms；storyboard 200/122250ms。页面没有刷新或业务级重试。 |
+| branches 服务端 retry 证据 | PASS | Vercel 服务端 282821ms，requestId `req_7acbb146-ee4d-4b9e-9cf3-f6482b9daf57`；日志显示 `critic_retry` batch=1、errorCode=`INTERNAL_ERROR`、remainingMs=74993 后最终 HTTP 200。成功批次复用，失败批次单独重试。 |
+| 候选与六格结果 | PASS | 3 candidates/2 rejected；按测试规则选择第一条“术式残片预热延迟环”（不是用户偏好）；`finalAdjustment` 为空；`phase04`、六格 01—06、合规摘要可见。 |
+| 页面健康 | PASS（局部） | error banner=0、page errors=0、API request failures=0；另有 1 条未定位来源的静态资源 console 404，不能猜成 favicon。 |
+| 问题映射边界 | PASS（有瑕疵） | 两道问题均填“无硬性要求，重点是过渡连续、不生硬。”；q1“最终结局是否必须死亡，还是可以存活或另有结果？”更精确应答“用户可以接受五条悟死亡，但生死不是硬性要求”。该自动化措辞瑕疵未施加硬结局，must-have 已明确允许死亡，记录为非阻断人工审核问题，不夸为产品确定性语义保证。 |
+
+D050/D051 共同结论：修复后一次完整人工审核样本 PASS，但 critic retry 只余约 2.2 秒服务端余量，且没有独立第二条成功样本、文学质量/原作准确性评审或用户最终审核。因此整体仍为 `NOT_DONE`/release-not-ready；当前窗口保持打开，不创建 Release、不上传视频。
 
 ## 真实浏览器与 API 证据
 
@@ -110,7 +133,7 @@
 | 正式 Vercel 公网部署 | PASS | Vercel project `nioo4s-projects/comic-if-line`，project id `prj_3jFl5xENw4ijm17w3qcNLDqYKv97`；当前 production deployment 状态为 `READY`，永久、已验证 project domain/canonical alias 为 [https://comic-if-line.vercel.app](https://comic-if-line.vercel.app)。旧主域、旧团队域、旧 git-main 域均不在当前 alias list；历史 immutable deployment 不删除、不作为当前地址。D048 页面链路与 D049 本地录屏均为单次样本，不证明稳定性或 Release 就绪。 |
 | 核心路径演示视频（历史 Release） | INVALIDATED | 原 `v0.1-demo` Release 及视频 asset 经用户审核不合格已删除，不再作为有效交付证据；D049 未创建替代 Release 或上传视频。 |
 | 不超过 5 分钟完整端到端录屏 | PASS（本地） | D049 主 HQ MP4 290.04s，1440×900，完整 decode exit 0，HQ 实际视频帧抽检清晰；文件只保存在仓库外本地 `acceptance-artifacts`，不代表公开 Release。 |
-| 整体完成 / Release 就绪 | NOT_DONE | 多次模型/结构输出失败、单次成功不证明稳定性；遗憾负面属性的 change-target 语义保证仍是未实现缺口，且未获用户审核/发布替代 Release。 |
+| 整体完成 / Release 就绪 | NOT_DONE | 多次模型/结构输出失败、单次成功不证明稳定性；D050 已完成遗憾负面属性 change-target 规则的 prompt 级实现，D051 单样本生效，但确定性/泛化和用户最终审核仍未完成，且未发布替代 Release。 |
 
 用户授权后的 D043 动作已完成：link → 服务端敏感环境变量 → production deploy；D046 完成 GitHub/Vercel 原地改名和新 production deploy，D048 以同一条真实 Chromium production 序列完成输入 → analyze → 事实确认 → branches → storyboard 六格，D049 又完成同案例的完整本地录屏与 HQ 离线验片。D048/D049 都只是单次样本，不证明文学质量、原作准确性或稳定性；D049 视频未创建 Release、未上传，当前整体仍为 `NOT_DONE`。正式授权链接不会写入文档。
 
