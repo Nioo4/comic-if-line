@@ -1,10 +1,10 @@
 # 意难平 IF 验收记录
 
-当前整体状态：尚未 Done。Vercel 公网部署、公开演示录屏和最终线上交付仍未完成；这些项目保持 `NOT_RUN`，不以本地证据替代。
+当前整体状态：尚未 Done。Vercel 公网部署因 CLI 认证阻塞，完整端到端公开录屏仍未完成；核心路径演示已单独发布，不能替代完整流程或稳定性证据。
 
 - 验收开始：`2026-09-09 03:57:41 +08:00`
-- 本轮记录时刻：`2026-09-09 08:16:26 +08:00`
-- 截至本轮记录实际投入：`4 小时 18 分 45 秒`（从上述开始时间计算）
+- 本轮记录时刻：`2026-09-09 08:21:33 +08:00`
+- 截至本轮记录实际投入：`4 小时 23 分 52 秒`（从上述开始时间计算）
 - 说明：最终交付结束时间和总投入待线上部署后更新；达到 5 小时必须停止并如实提交状态。
 - 外部验收截图：`D:\新建文件夹\恺英笔试\acceptance-artifacts`（仓库外，不提交）。
 
@@ -30,19 +30,22 @@
 | session restore | PASS | `workTitle`、`regret`、动态列表刷新恢复；坏 JSON 安全回到空白输入页；fatal error false；console errors 0。 |
 | 第二次真实端到端录屏 | FAIL | `/api/analyze` PASS：24.254s，usage input 879 / output 2211 / total 3090；随后 `/api/branches` 在 179.971s 返回 HTTP 502，usage input 1344 / output 3073 / total 4417，前端未进入候选页；录屏已终止，不作为成功演示。 |
 | branches 稳定性样本汇总 | FAIL | 当前有 1 次成功、1 次失败（成功率样本 1/2），不足以宣称端到端稳定；失败路径按安全错误语义返回 502 属产品安全失败行为 PASS。 |
+| 核心路径演示视频 | PASS | [GitHub Release v0.1-demo](https://github.com/Nioo4/yinanping-if/releases/tag/v0.1-demo) / [视频资产](https://github.com/Nioo4/yinanping-if/releases/download/v0.1-demo/yinanping-if-core-demo.webm)；48.60s、3,532,816 bytes；范围仅为载入自创示例 → 真实 analyze → 上下文确认，真实 analyze 49.155s、factCards=6、questionCards=3、consoleError=0，不覆盖 branches/storyboard。 |
 
 ## 交付状态
 
 | 交付项 | 状态 | 地址/说明 |
 | --- | --- | --- |
 | GitHub 公共仓库 | PASS | `https://github.com/Nioo4/yinanping-if`；2026-09-09 08:07:22 +08:00 创建并确认 `isPrivate=false`。 |
-| GitHub 初始提交 push | PASS | `HEAD:main` 已推送；远端 `main` 指向提交 `261c89ad4f83fcb78952e21c9640a9789f3147af`，并由 `gh repo view` 验证 URL 可见、`isPrivate=false`。未使用 force push。 |
-| Vercel 公网部署 | NOT_RUN | 待主 Agent 完成本地验收后部署。 |
-| 不超过 5 分钟录屏 | NOT_RUN | 待部署和录制后更新。 |
+| GitHub 初始提交 push | PASS | `HEAD:main` 已推送；远端 `main` 指向提交 `bb693f0d6bdd64fb013726805bc1904002964997`，并由 `gh repo view` 验证 URL 可见、`isPrivate=false`。未使用 force push。 |
+| Vercel 临时公开部署 | BLOCKED | 官方 CLI `vercel deploy --temporary --yes` exit code 1，错误类别为 auth；未产生 deployment/claim URL，未把它写成上线。 |
+| 正式 Vercel 公网部署 | BLOCKED | `BLOCKED_AUTH/NOT_DONE`：当前未登录 Vercel，待后续授权后使用托管平台环境变量部署。 |
+| 核心路径演示视频 | PASS | 已发布至 [Release v0.1-demo](https://github.com/Nioo4/yinanping-if/releases/tag/v0.1-demo)，只上传该核心路径视频；失败的完整端到端录屏未上传。 |
+| 不超过 5 分钟完整端到端录屏 | NOT_RUN | 核心路径视频不等同于完整端到端演示；待正式部署并重新录制。 |
 
 ## 安全与证据边界
 
-- `api.txt` 内容未读取、未输出；它不属于仓库。
-- 本记录只记录已实际核验的证据，不把模型自述、mock、直接 API 探针或本地构建结果当作浏览器全链路证据；branches 当前仅有 1/2 成功样本，不宣称端到端稳定。
-- 仓库内常见 secret pattern scan：PASS（未发现命中）；仓库内禁止路径 scan：PASS（无 `api.txt`、本地 env、AGENTS/CLAUDE、截图或媒体文件）；`.gitignore` 与 `.vercelignore` 已排除 `api.txt`、`.env*`、构建缓存和 `acceptance-artifacts`。
+- D039 中 `api.txt` 由主 Agent 在单一 PowerShell 进程内读取并只映射到部署子进程环境变量；值未输出、写文件或写日志，它不属于仓库。
+- 本记录只记录已实际核验的证据，不把模型自述、mock、直接 API 探针或本地构建结果当作浏览器全链路证据；branches 当前仅有 1/2 成功样本，不宣称端到端稳定；核心路径视频明确不覆盖 branches/storyboard。
+- 仓库内常见 secret pattern scan：PASS（未发现命中）；仓库内禁止路径 scan：PASS（无 `api.txt`、本地 env、AGENTS/CLAUDE、截图或媒体文件；`.vercel` 仅本地生成且未跟踪）；`.gitignore` 与 `.vercelignore` 已排除 `api.txt`、`.env*`、构建缓存和 `acceptance-artifacts`。
 - `api.txt` 精确值比较：PASS（由主 Agent 在内存中完成，不输出秘密；2 条非空值均未命中，`exactSecretMatchCount=0`、`genericSecretPatternMatchCount=0`）；本仓库未提交或输出任何 key。

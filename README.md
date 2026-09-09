@@ -56,10 +56,11 @@ npm run eval
 
 `npm run eval` 只验证不依赖模型的请求边界、结构契约、规则和调用预算，不冒充真实浏览器或真实模型验收。当前真实 branches 仅有 1 次成功和 1 次失败样本，不能据此宣称端到端稳定。
 
-完整的真实验收证据见 [ACCEPTANCE.md](./ACCEPTANCE.md)。其中未完成的线上部署、公开链接和录屏明确标为 `NOT_RUN`，不会用本地结果代替。
+完整的真实验收证据见 [ACCEPTANCE.md](./ACCEPTANCE.md)。当前正式/临时 Vercel 部署标为 `BLOCKED_AUTH/NOT_DONE`；已发布的核心路径视频只覆盖真实 analyze 与上下文确认，不代表完整端到端或稳定性验收。
 
 ## 交付链接
 
 - GitHub 仓库 URL：[https://github.com/Nioo4/yinanping-if](https://github.com/Nioo4/yinanping-if)（public 仓库与首个提交已验证可见）
-- 公共 Vercel URL：验收后补
-- 不超过 5 分钟录屏：验收后补
+- 公共 Vercel URL：`BLOCKED_AUTH/NOT_DONE`，待后续登录并使用托管平台环境变量部署
+- 核心路径演示：[Release v0.1-demo](https://github.com/Nioo4/yinanping-if/releases/tag/v0.1-demo) · [视频资产](https://github.com/Nioo4/yinanping-if/releases/download/v0.1-demo/yinanping-if-core-demo.webm)
+- 不超过 5 分钟完整端到端录屏：待正式部署后补；核心路径视频不替代完整流程
