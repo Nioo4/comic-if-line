@@ -1,13 +1,13 @@
 # 漫画IF线验收记录
 
-当前整体状态：尚未 Done，且不具备 Release 就绪条件。漫画IF线新名称 production 已 Ready；永久 project domain 配置后由主 Agent 独立复核匿名公网 GET 为 PASS：HTTP 200、最终 URI 仍为 `https://comic-if-line.vercel.app/`、HTML title 为“漫画IF线”、包含产品名称且不是 Vercel 登录页。D047 production 输入门禁 PASS；D048 由 Luna Max 子 Agent 在隔离 Chromium 中执行同一条真实 production 页面序列，主 Agent 复核证据，最终从输入走通 analyze、事实确认、branches 到六格 storyboard。D049 又完成一条从初始页到六格及合规摘要的单一连续真实 production 录屏；D050 完成 branches 长尾失败的最小可靠性修复并部署，D051 在新可见隔离窗口中再次完整走通人工审核路径。录屏/本地页面链路与本次窗口可标为局部 `PASS`，但多次模型/输出失败、critic retry 余量很紧、q1 自动化措辞瑕疵和单次样本边界仍不支持稳定性或 Release 声明；原核心路径演示 Release 经用户审核不合格已删除，未创建新 Release 或上传视频。
+当前三层状态：项目开发已收尾并冻结（`PROJECT_CLOSED_WITH_KNOWN_LIMITATIONS`）；MVP 交付 `PASS`（`MVP_DELIVERED`）；`Release-ready=NO / strict DoD=NOT_MET`。漫画IF线新名称 production 已 Ready；永久 project domain 配置后由主 Agent 独立复核匿名公网 GET 为 PASS：HTTP 200、最终 URI 仍为 `https://comic-if-line.vercel.app/`、HTML title 为“漫画IF线”、包含产品名称且不是 Vercel 登录页。D047 production 输入门禁 PASS；D048 由 Luna Max 子 Agent 在隔离 Chromium 中执行同一条真实 production 页面序列，主 Agent 复核证据，最终从输入走通 analyze、事实确认、branches 到六格 storyboard。D049 又完成一条从初始页到六格及合规摘要的单一连续真实 production 录屏；D050 完成 branches 长尾失败的最小可靠性修复并部署，D051 在新可见隔离窗口中再次完整走通人工审核路径。MVP 证据已覆盖核心路径、公开 GitHub、production URL、本地完整录屏和修复后咒术案例；严格 DoD 仍未满足，因为 C01—C08 尚未全部完成真实页面逐项验证，也没有多样本稳定性、文学质量或原作准确性证明，未获新 Release 批准。
 
 - 验收开始：`2026-09-09 03:57:41 +08:00`
 - 初始收口记录时刻：`2026-09-09 08:48:25 +08:00`
 - 初始阶段实际投入：`4 小时 50 分 44 秒`（从上述开始时间计算；达到 5 小时即停止初始阶段）
 - D043/D044 续作记录时刻：`2026-09-09 12:35:21 +08:00`
 - 从开始时间计算的墙钟跨度：`8 小时 37 分 40 秒`；这是用户授权后的部署续作时间线，不回写初始 5 小时投入。
-- 说明：D049 的完整录屏已在本地完成并通过 HQ 离线验片，但整体仍 `NOT_DONE`，不以单条成功证据声称稳定性、Release 或整体交付完成。
+- 说明：D049 的完整录屏已在本地完成并通过 HQ 离线验片；D052 将当前状态固定为“项目开发已收尾；MVP 交付 PASS；Release-ready=NO / strict DoD=NOT_MET”，不以单条成功证据声称稳定性、Release 或严格 DoD 完成。
 - 续作说明：D043/D044 是用户在初始 5 小时收口后明确“已授权”的部署续作；续作不篡改上述初始投入记录。
 - 续作记录时刻：`2026-09-09 12:29:54 +08:00`
 - 外部验收截图：`D:\新建文件夹\恺英笔试\acceptance-artifacts`（仓库外，不提交）。
@@ -73,7 +73,7 @@
 
 本轮及前置录制尝试没有被拼接为成功：Chromium 初始自动化失败；旧 ffmpeg `gdigrab/draw_mouse` 不支持；脚本错误地要求 0 questions 时必须出现 `#questions-title`；`/api/branches` 曾在约 216055ms 返回 502；deliberate re-analyze 曾返回 `MODEL_OUTPUT_INVALID`/502（request `req_c9d5e9ac-bb13-4881-8f22-be74d0c105b9`）；宽泛死亡正则曾把时间跨度等非核心问题误答为死亡许可；遗憾中的“突然腰斩/缺少铺垫”曾被误当作必须保留的原作事实并造成冲突；低码率 MP4 通过解码却因画面糊被拒绝。最终在明确派生 must-have 后才形成上述成功序列，并完成 HQ 重编码和视频帧复核。
 
-本条把“<=5 分钟完整端到端录屏”标为本地 `PASS`，不把它扩大为稳定性 PASS。多次模型/结构输出失败说明整体尚未 Done；Spec 中“遗憾描述的负面属性是 change target、不能默认成为 canon fact”的语义规则已由 D050 做 prompt 级实现，并在 D051 单样本中生效，但确定性与泛化仍待多样本验收。旧不合格 Release 已删除；D049 视频只在仓库外本地保存，不创建 Release、不上传，整体与 Release 就绪状态仍为 `NOT_DONE`。
+本条把“<=5 分钟完整端到端录屏”标为本地 `PASS`，不把它扩大为稳定性 PASS。多次模型/结构输出失败仍作为历史边界保留；Spec 中“遗憾描述的负面属性是 change target、不能默认成为 canon fact”的语义规则已由 D050 做 prompt 级实现，并在 D051 单样本中生效，但确定性与泛化仍待多样本验收。旧不合格 Release 已删除；D049 视频只在仓库外本地保存，不创建 Release、不上传。D049 时点记录的 `NOT_DONE` 不覆盖 D052 当前三层状态：项目开发已收尾；MVP 交付 `PASS`；`Release-ready=NO / strict DoD=NOT_MET`。
 
 ## D050 可靠性修复、部署与根因边界
 
@@ -96,7 +96,14 @@
 | 页面健康 | PASS（局部） | error banner=0、page errors=0、API request failures=0；另有 1 条未定位来源的静态资源 console 404，不能猜成 favicon。 |
 | 问题映射边界 | PASS（有瑕疵） | 两道问题均填“无硬性要求，重点是过渡连续、不生硬。”；q1“最终结局是否必须死亡，还是可以存活或另有结果？”更精确应答“用户可以接受五条悟死亡，但生死不是硬性要求”。该自动化措辞瑕疵未施加硬结局，must-have 已明确允许死亡，记录为非阻断人工审核问题，不夸为产品确定性语义保证。 |
 
-D050/D051 共同结论：修复后一次完整人工审核样本 PASS，但 critic retry 只余约 2.2 秒服务端余量，且没有独立第二条成功样本、文学质量/原作准确性评审或用户最终审核。因此整体仍为 `NOT_DONE`/release-not-ready；当前窗口保持打开，不创建 Release、不上传视频。
+D050/D051 共同结论：修复后一次完整人工审核样本 PASS，但 critic retry 只余约 2.2 秒服务端余量，且没有独立第二条成功样本、文学质量/原作准确性评审或用户最终审核。D052 收口为三层状态：项目开发已收尾并冻结；MVP 交付 `PASS`；`Release-ready=NO / strict DoD=NOT_MET`。当前窗口保持打开，不创建 Release、不上传视频。
+
+## D052 项目收口与交接
+
+- 本轮本地检查：Node `v24.15.0`、npm `11.12.1`、`package-lock.json` 存在；`npm run lint`、`npm run build`、`npm run eval`（8/8）和 `git diff --check` 均 PASS。Next build 曾机械改写 `next-env.d.ts`，已恢复，未形成产品代码差异。
+- 收口取舍：根据“尽快收尾项目”，不再追加模型调用、不为统计稳定性继续改代码；保留历史 FAIL/BLOCKED/NOT_RUN 和严格 DoD 门槛，不把 MVP PASS 扩大为 Release-ready。
+- 交接风险：DeepSeek 长尾且一次 critic retry 仅余约 2.2 秒；原作准确性依赖用户确认的局部事实；语义规则只有单样本验证，不能证明泛化；存在 1 条未定位静态资源 404；无新 Release、无公开视频。旧不合格 Release 继续保持删除状态。
+- 交付状态：项目开发已收尾并冻结（`PROJECT_CLOSED_WITH_KNOWN_LIMITATIONS`）；MVP 交付 `PASS`（`MVP_DELIVERED`）；`Release-ready=NO / strict DoD=NOT_MET`。若未来重新申请 Release，必须重新完成 C01—C08 真实页面逐项验证并取得明确批准。
 
 ## 真实浏览器与 API 证据
 
@@ -133,9 +140,11 @@ D050/D051 共同结论：修复后一次完整人工审核样本 PASS，但 crit
 | 正式 Vercel 公网部署 | PASS | Vercel project `nioo4s-projects/comic-if-line`，project id `prj_3jFl5xENw4ijm17w3qcNLDqYKv97`；当前 production deployment 状态为 `READY`，永久、已验证 project domain/canonical alias 为 [https://comic-if-line.vercel.app](https://comic-if-line.vercel.app)。旧主域、旧团队域、旧 git-main 域均不在当前 alias list；历史 immutable deployment 不删除、不作为当前地址。D048 页面链路与 D049 本地录屏均为单次样本，不证明稳定性或 Release 就绪。 |
 | 核心路径演示视频（历史 Release） | INVALIDATED | 原 `v0.1-demo` Release 及视频 asset 经用户审核不合格已删除，不再作为有效交付证据；D049 未创建替代 Release 或上传视频。 |
 | 不超过 5 分钟完整端到端录屏 | PASS（本地） | D049 主 HQ MP4 290.04s，1440×900，完整 decode exit 0，HQ 实际视频帧抽检清晰；文件只保存在仓库外本地 `acceptance-artifacts`，不代表公开 Release。 |
-| 整体完成 / Release 就绪 | NOT_DONE | 多次模型/结构输出失败、单次成功不证明稳定性；D050 已完成遗憾负面属性 change-target 规则的 prompt 级实现，D051 单样本生效，但确定性/泛化和用户最终审核仍未完成，且未发布替代 Release。 |
+| 项目开发收尾 | PASS | 工程实现、文档、production 部署和本地证据已收口并冻结；状态为 `PROJECT_CLOSED_WITH_KNOWN_LIMITATIONS`。 |
+| MVP 交付 | PASS | `MVP_DELIVERED`：核心路径、公开 GitHub、production URL、本地完整录屏和 D051 修复后咒术案例均有 PASS 证据。 |
+| Release-ready / strict DoD | NO / NOT_MET | C01—C08 尚未全部完成真实页面逐项验证；无多样本稳定性、文学质量或原作准确性证明，未获新 Release 批准。 |
 
-用户授权后的 D043 动作已完成：link → 服务端敏感环境变量 → production deploy；D046 完成 GitHub/Vercel 原地改名和新 production deploy，D048 以同一条真实 Chromium production 序列完成输入 → analyze → 事实确认 → branches → storyboard 六格，D049 又完成同案例的完整本地录屏与 HQ 离线验片。D048/D049 都只是单次样本，不证明文学质量、原作准确性或稳定性；D049 视频未创建 Release、未上传，当前整体仍为 `NOT_DONE`。正式授权链接不会写入文档。
+用户授权后的 D043 动作已完成：link → 服务端敏感环境变量 → production deploy；D046 完成 GitHub/Vercel 原地改名和新 production deploy，D048 以同一条真实 Chromium production 序列完成输入 → analyze → 事实确认 → branches → storyboard 六格，D049 又完成同案例的完整本地录屏与 HQ 离线验片。D048/D049 都只是单次样本，不证明文学质量、原作准确性或稳定性；D052 已将项目冻结为 MVP 交付 PASS、Release-ready=NO、strict DoD=NOT_MET。D049 视频未创建 Release、未上传，正式授权链接不会写入文档。
 
 ## 安全与证据边界
 
