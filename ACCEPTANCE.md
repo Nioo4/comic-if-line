@@ -1,13 +1,13 @@
 # 漫画IF线验收记录
 
-当前整体状态：尚未 Done。漫画IF线新名称 production 已 Ready；永久 project domain 配置后由主 Agent 独立复核匿名公网 GET 为 PASS：HTTP 200、最终 URI 仍为 `https://comic-if-line.vercel.app/`、HTML title 为“漫画IF线”、包含产品名称且不是 Vercel 登录页。D047 production 输入门禁 PASS；D048 由 Luna Max 子 Agent 在隔离 Chromium 中执行同一条真实 production 页面序列，主 Agent 复核证据，最终从输入走通 analyze、事实确认、branches 到六格 storyboard，单次完整页面链路 PASS。D048 不把文学质量、原作准确性或单次成功当作稳定性证明，完整端到端公开录屏仍未完成；原核心路径演示 Release 经用户审核不合格已删除，原视频不再作为有效交付证据，演示视频交付恢复为待重新制作/`NOT_DONE`。
+当前整体状态：尚未 Done，且不具备 Release 就绪条件。漫画IF线新名称 production 已 Ready；永久 project domain 配置后由主 Agent 独立复核匿名公网 GET 为 PASS：HTTP 200、最终 URI 仍为 `https://comic-if-line.vercel.app/`、HTML title 为“漫画IF线”、包含产品名称且不是 Vercel 登录页。D047 production 输入门禁 PASS；D048 由 Luna Max 子 Agent 在隔离 Chromium 中执行同一条真实 production 页面序列，主 Agent 复核证据，最终从输入走通 analyze、事实确认、branches 到六格 storyboard。D049 又完成一条从初始页到六格及合规摘要的单一连续真实 production 录屏，录屏交付这一项可标为本地 `PASS`，但多次模型/输出失败、语义映射纠偏和单次样本边界仍不支持稳定性或 Release 声明；原核心路径演示 Release 经用户审核不合格已删除，原视频不再作为有效交付证据，未创建新 Release 或上传 D049 视频。
 
 - 验收开始：`2026-09-09 03:57:41 +08:00`
 - 初始收口记录时刻：`2026-09-09 08:48:25 +08:00`
 - 初始阶段实际投入：`4 小时 50 分 44 秒`（从上述开始时间计算；达到 5 小时即停止初始阶段）
 - D043/D044 续作记录时刻：`2026-09-09 12:35:21 +08:00`
 - 从开始时间计算的墙钟跨度：`8 小时 37 分 40 秒`；这是用户授权后的部署续作时间线，不回写初始 5 小时投入。
-- 说明：整体仍 `NOT_DONE`，完整线上流程与交付录屏待补；不以未完成证据声称整体交付完成。
+- 说明：D049 的完整录屏已在本地完成并通过 HQ 离线验片，但整体仍 `NOT_DONE`，不以单条成功证据声称稳定性、Release 或整体交付完成。
 - 续作说明：D043/D044 是用户在初始 5 小时收口后明确“已授权”的部署续作；续作不篡改上述初始投入记录。
 - 续作记录时刻：`2026-09-09 12:29:54 +08:00`
 - 外部验收截图：`D:\新建文件夹\恺英笔试\acceptance-artifacts`（仓库外，不提交）。
@@ -40,7 +40,40 @@
 | production 页面 API 连续序列 | PASS | Luna Max 子 Agent 在隔离 Chromium 中执行的同一最终页面序列，由主 Agent 复核页面证据、最终截图与 Vercel 同序列日志：analyze HTTP 200/32.434s；录入用户已确认答案后 deliberate re-analyze HTTP 200/47.051s；branches HTTP 200/143.899s；storyboard HTTP 200/58.776s；业务重试 0。Vercel 服务端同序列日志对应 analyze 200/32.151s、re-analyze 200/46.725s、branches 200/143.385s、storyboard 200/58.460s。 |
 | 事实确认与候选选择 | PASS | 初始 context 为 3 questions/7 facts/0 conflicts；最终为 3 questions/6 facts/0 conflicts，fact defaults 未修改。branches 返回 3 candidates/2 rejected；按预设验收规则选择第一条“延迟斩击由胜利宣告触发”；`finalAdjustment` 为空。 |
 | 六格成稿与页面健康 | PASS | `phase04`，6 panels，编号 01—06；有合规摘要；error banner 0、page errors 0、API failures 0。仅有一个非阻断静态资源 console 404，未精确定位，不写成 favicon 等已确认原因。 |
-| 证据与范围边界 | PASS | 证据截图：`D:\新建文件夹\恺英笔试\acceptance-artifacts\jujutsu-e2e-final.png`（仓库外、不提交）。本条只证明一次连续 production 页面链路；不评价文学质量、不声称原作准确、不将一次成功写成稳定性证明。完整录屏仍 `NOT_DONE`，原不合格 Release 已删除，整体仍 `NOT_DONE`。 |
+| 证据与范围边界 | PASS | 证据截图：`D:\新建文件夹\恺英笔试\acceptance-artifacts\jujutsu-e2e-final.png`（仓库外、不提交）。本条只证明 D048 时点的一次连续 production 页面链路；不评价文学质量、不声称原作准确、不将一次成功写成稳定性证明。D048 时点完整录屏为 `NOT_DONE`，D049 后的本地录屏见下一节；整体仍 `NOT_DONE`。 |
+
+## D049 最终完整连续 production 录屏与 HQ 视频验片
+
+### 输入、语义映射与范围
+
+固定输入为 `workTitle=咒术回战`、`plotContext=新宿决战 五条悟打宿傩`，遗憾及原因为：`五条悟被腰斩。原因是五条悟的设定一直是最强 在于宿傩的对战中见招拆招处于上风但是在优势最大的那一刻宣布胜利后突然被腰斩 令人无法接受`。最终派生的 must-have（明确标注为非用户原话）为：`五条悟可以在新宿决战中死亡；原作中“宣布胜利后突然被腰斩且缺少可见铺垫”是要改写的遗憾，不是必须保留的事实。IF线中，从他占据上风、被宣布胜利到宿傩完成致命一击之间，必须有连续、可见且符合双方能力与行动逻辑的铺垫，不能突然反转。`
+
+三道实际追问均回答：`无硬性要求，重点是过渡连续、不生硬。`。这是与用户意图一致的测试输入归一，不是声称用户逐字回答；明确询问死亡许可才可使用死亡许可答案，时间跨度、死后意识、宿傩机制、展示形式等非核心问题均不能套用该答案。
+
+### 单一连续页面与 API 证据
+
+| 验收项 | 状态 | 证据/说明 |
+| --- | --- | --- |
+| 从初始页到结果页的单一连续 production 序列 | PASS（本地录屏） | run `production-jujutsu-e2e-playwright-2026-09-09T11-24-12-617Z`；全新 Playwright 隔离 Chromium context，从空白/初始输入页开始，录入、提交、追问、事实确认、候选页、按预设规则选择第一条、生成六格并展示合规摘要；未碰用户浏览器，业务重试 0，不剪切、不拼接。 |
+| 页面自身 API | PASS | `analyze` HTTP 200/35301ms；deliberate re-analyze HTTP 200/63828ms；`branches` HTTP 200/129577ms；`storyboard` HTTP 200/118099ms。每个业务 API 均为 200。 |
+| 页面健康与结构 | PASS | 初始 8 facts/3 questions/0 conflicts；最终 5 facts/0 questions/0 conflicts；3 candidates/2 rejected；按预设验收规则选择第一条“预判解除空间斩的连续压制”，不是用户选择；`phase04`、6 panels、编号 01—06，合规摘要可见；error banner=0、page errors=0、console errors=0、API request failures=0、静态资源 HTTP errors=0。 |
+| 问题与事实映射 | PASS（输入映射） | 三个实际问题均记录所选答案、匹配理由和最终请求映射于原始 manifest；本轮答案是“无硬性要求，重点是过渡连续、不生硬。”的语义一致归一，不伪称为用户逐字回答。 |
+
+### 视频文件与离线验片
+
+| 文件 | 状态 | 元数据与 SHA-256 |
+| --- | --- | --- |
+| raw WebM | PASS | `D:\新建文件夹\恺英笔试\acceptance-artifacts\production-jujutsu-e2e-playwright-2026-09-09T11-24-12-617Z-raw.webm`；365.92s，1440×900，VP8，18186870 bytes；SHA256 `28975CFD99734D66BEDD00C3DF8A26DB7975652AB03E7929F517E16EA4F3E574`。 |
+| 最终主文件 presentation HQ MP4 | PASS | `D:\新建文件夹\恺英笔试\acceptance-artifacts\production-jujutsu-e2e-playwright-2026-09-09T11-24-12-617Z-presentation-hq-1.26x.mp4`；由同一 raw 全局 `1.26179310344828x` 加速，无剪切/拼接；290.04s，1440×900，H.264 High，145186640 bytes；SHA256 `58D8380494A18F93A909E731EA4CB692A22F14F3CCA9C6DED200E52A62BE6590`；完整 decode exit 0。 |
+| HQ VP8 WebM 备份 | PASS | `D:\新建文件夹\恺英笔试\acceptance-artifacts\production-jujutsu-e2e-playwright-2026-09-09T11-24-12-617Z-presentation-hq-1.26x.webm`；290.04s，1440×900，VP8/libvpx，15671454 bytes；SHA256 `CCE9547DB64AA66C4A498CA0FB850A963EB286DB912D08B9EB7C1E42330335DF`；完整解码/重编码检查 exit 0。 |
+| 原低码率 accelerated MP4 | REJECTED | `D:\新建文件夹\恺英笔试\acceptance-artifacts\production-jujutsu-e2e-playwright-2026-09-09T11-24-12-617Z-accelerated-1.26x.mp4` 保留但不作最终证据；虽可解码，离线抽帧发现中文文字严重重影/模糊，故不能用它代表清晰交付。 |
+| manifest | PASS | `D:\新建文件夹\恺英笔试\acceptance-artifacts\production-jujutsu-e2e-playwright-2026-09-09T11-24-12-617Z-manifest.json`；116500 bytes；SHA256 `B45A26FEC869DC3DAA46569C1A5AD446BE59222B3D5D9F3C2616F1666F69D12F`；原 manifest 未改写。视频、manifest、六张 HQ 实际视频帧均在仓库外本地目录，未提交、未发布。 |
+
+### 历史失败、拒绝与当前边界
+
+本轮及前置录制尝试没有被拼接为成功：Chromium 初始自动化失败；旧 ffmpeg `gdigrab/draw_mouse` 不支持；脚本错误地要求 0 questions 时必须出现 `#questions-title`；`/api/branches` 曾在约 216055ms 返回 502；deliberate re-analyze 曾返回 `MODEL_OUTPUT_INVALID`/502（request `req_c9d5e9ac-bb13-4881-8f22-be74d0c105b9`）；宽泛死亡正则曾把时间跨度等非核心问题误答为死亡许可；遗憾中的“突然腰斩/缺少铺垫”曾被误当作必须保留的原作事实并造成冲突；低码率 MP4 通过解码却因画面糊被拒绝。最终在明确派生 must-have 后才形成上述成功序列，并完成 HQ 重编码和视频帧复核。
+
+本条把“<=5 分钟完整端到端录屏”标为本地 `PASS`，不把它扩大为稳定性 PASS。多次模型/结构输出失败说明整体尚未 Done；Spec 中“遗憾描述的负面属性是 change target、不能默认成为 canon fact”的语义保证是已发现但尚未实现的实现缺口。旧不合格 Release 已删除；D049 视频只在仓库外本地保存，不创建 Release、不上传，整体与 Release 就绪状态仍为 `NOT_DONE`。
 
 ## 真实浏览器与 API 证据
 
@@ -55,7 +88,7 @@
 | session restore | PASS | `workTitle`、`regret`、动态列表刷新恢复；坏 JSON 安全回到空白输入页；fatal error false；console errors 0。 |
 | 历史第二次真实端到端录屏（D043/D044） | FAIL | `/api/analyze` PASS：24.254s，usage input 879 / output 2211 / total 3090；随后 `/api/branches` 在 179.971s 返回 HTTP 502，usage input 1344 / output 3073 / total 4417，前端未进入候选页；录屏已终止，不作为成功演示。 |
 | 历史 branches 稳定性样本汇总（D043/D044） | FAIL | 当时有 1 次成功、1 次失败（成功率样本 1/2），不足以宣称端到端稳定；失败路径按安全错误语义返回 502 属产品安全失败行为 PASS。该历史统计不吸收或替代 D048 单次成功。 |
-| 核心路径演示视频（历史证据，已失效） | INVALIDATED | 原 `v0.1-demo` Release/asset 曾记录 48.60s、3,532,816 bytes；范围仅为载入自创示例 → 真实 analyze → 上下文确认，真实 analyze 49.155s、factCards=6、questionCards=3、consoleError=0，不覆盖 branches/storyboard。2026-09-09 经用户审核不合格已删除 Release 及 asset，历史数据保留但不再作为有效交付证据；演示视频交付恢复为待重新制作/`NOT_DONE`。 |
+| 核心路径演示视频（历史证据，已失效） | INVALIDATED | 原 `v0.1-demo` Release/asset 曾记录 48.60s、3,532,816 bytes；范围仅为载入自创示例 → 真实 analyze → 上下文确认，真实 analyze 49.155s、factCards=6、questionCards=3、consoleError=0，不覆盖 branches/storyboard。2026-09-09 经用户审核不合格已删除 Release 及 asset，历史数据保留但不再作为有效交付证据；D049 是另一本地完整录屏，未创建替代 Release。 |
 | production deployment | PASS | 本次统一命名前的 Vercel 历史部署，当前地址见下方新名称交付记录；build 31s、Node 24.x、function timeout 300s。 |
 | production 环境配置 | PASS | 已配置四个变量名：`DEEPSEEK_BASE_URL`、`DEEPSEEK_API_KEY`（sensitive）、`AI_CALL_TIMEOUT_MS`、`MAX_REQUEST_BYTES`（config）；不记录值。 |
 | production GET（agent） | PASS | 改名前历史 production alias HTTP 200，标题包含“让遗憾拥有另一条可信的路”；当前地址见下方新名称交付记录。 |
@@ -74,16 +107,17 @@
 | GitHub 本次重命名提交 push | PASS | 重命名提交与部署引用提交均已推送；核验时本地分支与 `origin/main` 对齐；未使用 force push。 |
 | Vercel 临时公开部署 | BLOCKED | D041 在临时 Linux 容器中 `npm ci` 和 Next build PASS，上传进度完成（约 1.8MB）；匿名远端 builder 因计划限制失败，历史临时路径不作为 production 证据。 |
 | Vercel 临时匿名部署 | BLOCKED | `BLOCKED_PLAN`：匿名计划只接受 1–60 秒，而三条 Route 固定为 `maxDuration=300`；不为假上线降低产品时限设计。 |
-| 正式 Vercel 公网部署 | PASS | Vercel project `nioo4s-projects/comic-if-line`，project id `prj_3jFl5xENw4ijm17w3qcNLDqYKv97`；当前 production deployment 状态为 `READY`，永久、已验证 project domain/canonical alias 为 [https://comic-if-line.vercel.app](https://comic-if-line.vercel.app)。旧主域、旧团队域、旧 git-main 域均不在当前 alias list；历史 immutable deployment 不删除、不作为当前地址。D048 已完成一次完整页面链路，但稳定性、完整录屏仍未完成。 |
-| 核心路径演示视频 | NOT_DONE | 原 `v0.1-demo` Release 及视频 asset 经用户审核不合格已删除，不再作为有效交付证据；待重新制作并重新验收。 |
-| 不超过 5 分钟完整端到端录屏 | NOT_RUN | 历史核心路径视频不等同于完整端到端演示；待重新制作并重新录制。 |
+| 正式 Vercel 公网部署 | PASS | Vercel project `nioo4s-projects/comic-if-line`，project id `prj_3jFl5xENw4ijm17w3qcNLDqYKv97`；当前 production deployment 状态为 `READY`，永久、已验证 project domain/canonical alias 为 [https://comic-if-line.vercel.app](https://comic-if-line.vercel.app)。旧主域、旧团队域、旧 git-main 域均不在当前 alias list；历史 immutable deployment 不删除、不作为当前地址。D048 页面链路与 D049 本地录屏均为单次样本，不证明稳定性或 Release 就绪。 |
+| 核心路径演示视频（历史 Release） | INVALIDATED | 原 `v0.1-demo` Release 及视频 asset 经用户审核不合格已删除，不再作为有效交付证据；D049 未创建替代 Release 或上传视频。 |
+| 不超过 5 分钟完整端到端录屏 | PASS（本地） | D049 主 HQ MP4 290.04s，1440×900，完整 decode exit 0，HQ 实际视频帧抽检清晰；文件只保存在仓库外本地 `acceptance-artifacts`，不代表公开 Release。 |
+| 整体完成 / Release 就绪 | NOT_DONE | 多次模型/结构输出失败、单次成功不证明稳定性；遗憾负面属性的 change-target 语义保证仍是未实现缺口，且未获用户审核/发布替代 Release。 |
 
-用户授权后的 D043 动作已完成：link → 服务端敏感环境变量 → production deploy；D046 完成 GitHub/Vercel 原地改名和新 production deploy，D048 又以同一条真实 Chromium production 序列完成输入 → analyze → 事实确认 → branches → storyboard 六格，页面与服务端均返回 200。D048 只是一次成功样本，不证明文学质量、原作准确性或稳定性；完整录屏仍待重新制作，当前整体仍为 `NOT_DONE`。正式授权链接不会写入文档。
+用户授权后的 D043 动作已完成：link → 服务端敏感环境变量 → production deploy；D046 完成 GitHub/Vercel 原地改名和新 production deploy，D048 以同一条真实 Chromium production 序列完成输入 → analyze → 事实确认 → branches → storyboard 六格，D049 又完成同案例的完整本地录屏与 HQ 离线验片。D048/D049 都只是单次样本，不证明文学质量、原作准确性或稳定性；D049 视频未创建 Release、未上传，当前整体仍为 `NOT_DONE`。正式授权链接不会写入文档。
 
 ## 安全与证据边界
 
 - D039 中 `api.txt` 由主 Agent 在单一 PowerShell 进程内读取并只映射到部署子进程环境变量；值未输出、写文件或写日志，它不属于仓库。
-- 本记录只记录已实际核验的证据，不把模型自述、mock、直接 API 探针或本地构建结果当作浏览器全链路证据；D043/D044 的 1/2 branches 统计保留为历史，D048 也仅是一次连续页面成功，不宣称端到端稳定；核心路径视频明确不覆盖 branches/storyboard，完整录屏仍未完成。
+- 本记录只记录已实际核验的证据，不把模型自述、mock、直接 API 探针或本地构建结果当作浏览器全链路证据；D043/D044 的 1/2 branches 统计保留为历史，D048 及 D049 也都只是一次连续页面成功，不宣称端到端稳定；历史核心路径视频明确不覆盖 branches/storyboard，D049 完整录屏虽已本地 PASS 仍不等同于 Release。
 - 仓库内常见 secret pattern scan：PASS（未发现命中）；仓库内禁止路径 scan：PASS（无 `api.txt`、本地 env、AGENTS/CLAUDE、截图或媒体文件；`.vercel` 仅本地生成且未跟踪）；`.gitignore` 与 `.vercelignore` 已排除 `api.txt`、`.env*`、构建缓存和 `acceptance-artifacts`。
 - `api.txt` 精确值比较：PASS（由主 Agent 在内存中完成，不输出秘密；2 条非空值均未命中，`exactSecretMatchCount=0`、`genericSecretPatternMatchCount=0`）；本仓库未提交或输出任何 key。
 - 网络边界：此前本机 curl、Node 和受控浏览器的 `vercel.app` 连接不稳定属于历史验收上下文；D048 只采用最后一条页面自身监听的连续序列并由 Vercel 日志交叉核对，不据此宣称全球 SLA。

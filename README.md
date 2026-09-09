@@ -57,9 +57,9 @@ npm run build
 npm run eval
 ```
 
-`npm run eval` 只验证不依赖模型的请求边界、结构契约、规则和调用预算，不冒充真实浏览器或真实模型验收。D048 已补充一次真实 production Chromium 从输入到六格的完整页面样本，但单次成功不代表端到端稳定、文学质量或原作准确性。
+`npm run eval` 只验证不依赖模型的请求边界、结构契约、规则和调用预算，不冒充真实浏览器或真实模型验收。D048 补充了一次真实 production Chromium 从输入到六格的页面样本；D049 又完成了一条从初始页到六格的完整单一连续录屏，但单次成功不代表端到端稳定、文学质量或原作准确性。
 
-完整的真实验收证据见 [ACCEPTANCE.md](./ACCEPTANCE.md)。匿名临时 Vercel 部署仍为 `BLOCKED_PLAN`（匿名计划限制 1–60 秒，应用 Route 固定 `maxDuration=300`）；正式 production 已 Ready，D048 已用一条连续真实 Chromium 页面序列跑通 analyze、事实确认、branches 和 storyboard 六格，但稳定性、文学质量、原作准确性和完整录屏仍未完成。原核心路径视频曾被发布，但经用户审核不合格后已删除，不再作为有效交付证据；演示视频交付恢复为待重新制作/`NOT_DONE`；当前整体仍为 `NOT_DONE`。
+完整的真实验收证据见 [ACCEPTANCE.md](./ACCEPTANCE.md)。匿名临时 Vercel 部署仍为 `BLOCKED_PLAN`（匿名计划限制 1–60 秒，应用 Route 固定 `maxDuration=300`）；正式 production 已 Ready，D049 已用隔离 Playwright Chromium 以一条连续序列跑通 analyze、事实确认、branches 和 storyboard 六格，并将 raw/HQ 录屏保存在仓库外本地。录屏这一项可标为本地 `PASS`，但稳定性、文学质量、原作准确性和 Release 就绪仍未完成；当前整体仍为 `NOT_DONE`。原核心路径视频曾被发布，但经用户审核不合格后已删除，不再作为有效交付证据，也未用新录屏创建 Release 或上传。
 
 ## 交付链接
 
@@ -68,6 +68,8 @@ npm run eval
 - 正式公共 Vercel URL：[https://comic-if-line.vercel.app](https://comic-if-line.vercel.app)（production `READY`；project `nioo4s-projects/comic-if-line`；新 immutable deployment 不作为当前用户地址）
 - 改名后公网页面复核：`PASS`；永久 project domain 配置后由主 Agent 独立复核匿名 GET 为 HTTP 200，最终 URI 仍为 `https://comic-if-line.vercel.app/`，HTML title 为“漫画IF线”，包含产品名称且不是 Vercel 登录页。该证据只覆盖页面 GET；D048 另有完整页面链路证据。
 - D048 production 单一连续真实 Chromium 页面链路（Luna Max 子 Agent 在隔离 Chromium 中执行，主 Agent 复核页面证据、最终截图与 Vercel 同序列日志）：analyze 200/32.434s，录入用户已确认答案后 deliberate re-analyze 200/47.051s，branches 200/143.899s，storyboard 200/58.776s，业务重试 0；初始 3 questions/7 facts/0 conflicts，最终 3 questions/6 facts/0 conflicts；3 candidates/2 rejected，按预设验收规则选择“延迟斩击由胜利宣告触发”，最终六格 `phase04`、01—06、合规摘要。页面 error banner/page errors/API failures 均为 0；另有一个未精确定位的非阻断静态资源 console 404。该单样本不代表稳定性或文学质量/原作准确性。
+- D049 最终完整录屏（本地 `PASS`，不代表 Release）：run `production-jujutsu-e2e-playwright-2026-09-09T11-24-12-617Z`；`analyze` 200/35301ms、deliberate re-analyze 200/63828ms、`branches` 200/129577ms、`storyboard` 200/118099ms；初始 8 facts/3 questions/0 conflicts，最终 5 facts/0 questions/0 conflicts；3 candidates/2 rejected，按预设验收规则选择第一条“预判解除空间斩的连续压制”（不是用户选择），六格 `phase04`、01—06、合规摘要可见；error banner/page errors/API request failures 均为 0。原始 WebM 365.92s；同一原片整体 `1.26179310344828x` 加速后，主文件 `D:\新建文件夹\恺英笔试\acceptance-artifacts\production-jujutsu-e2e-playwright-2026-09-09T11-24-12-617Z-presentation-hq-1.26x.mp4` 为 290.04s、1440×900、H.264 High、145186640 bytes、SHA256 `58D8380494A18F93A909E731EA4CB692A22F14F3CCA9C6DED200E52A62BE6590`；无剪切、无拼接、无业务重试，隔离浏览器未碰用户浏览器。
+- D049 备份与 manifest：raw WebM `D:\新建文件夹\恺英笔试\acceptance-artifacts\production-jujutsu-e2e-playwright-2026-09-09T11-24-12-617Z-raw.webm`，18186870 bytes、SHA256 `28975CFD99734D66BEDD00C3DF8A26DB7975652AB03E7929F517E16EA4F3E574`；HQ VP8 WebM `D:\新建文件夹\恺英笔试\acceptance-artifacts\production-jujutsu-e2e-playwright-2026-09-09T11-24-12-617Z-presentation-hq-1.26x.webm`，290.04s/15671454 bytes、SHA256 `CCE9547DB64AA66C4A498CA0FB850A963EB286DB912D08B9EB7C1E42330335DF`；manifest `D:\新建文件夹\恺英笔试\acceptance-artifacts\production-jujutsu-e2e-playwright-2026-09-09T11-24-12-617Z-manifest.json`，116500 bytes、SHA256 `B45A26FEC869DC3DAA46569C1A5AD446BE59222B3D5D9F3C2616F1666F69D12F`。三个媒体文件与 manifest 均在仓库外，未提交、未发布；低码率 `accelerated-1.26x.mp4` 保留但因中文文字重影/模糊明确 `REJECTED`，不能作最终证据。
 - Production protection bypass：D044 已撤销，当前查询为 `bypassCount=0`；未记录或公开任何 secret。
-- 核心路径演示视频：原 Release/tag `v0.1-demo` 及视频 asset 经用户审核不合格后删除，历史视频不再作为有效交付证据；待重新制作/`NOT_DONE`
-- 不超过 5 分钟完整端到端录屏：待重新制作并重新验收；production 已部署但历史核心路径视频不替代完整流程
+- 核心路径演示视频（历史 Release）：原 Release/tag `v0.1-demo` 及视频 asset 经用户审核不合格后删除，历史视频不再作为有效交付证据；D049 完整录屏未创建替代 Release/未上传
+- 不超过 5 分钟完整端到端录屏：D049 本地 `PASS`（主 HQ MP4 290.04s，完整解码与抽帧复核通过），但未创建 Release、未上传视频；整体仍 `NOT_DONE`，后续稳定性与语义规则仍需实现/验收
