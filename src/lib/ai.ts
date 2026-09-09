@@ -117,6 +117,18 @@ export function getRemainingModelTime(
   return Math.max(0, deadlineAt - now);
 }
 
+export function createReservedAttemptDeadline(
+  deadlineAt: number,
+  reserveMs: number,
+  minAttemptMs: number,
+  now = Date.now(),
+): number {
+  const remainingMs = getRemainingModelTime(deadlineAt, now);
+  return remainingMs > reserveMs + minAttemptMs
+    ? deadlineAt - reserveMs
+    : deadlineAt;
+}
+
 export function getEffectiveAiTimeoutMs(
   deadlineAt: number,
   now = Date.now(),
@@ -166,12 +178,17 @@ export function isIncompleteStructuredResponse(response: unknown): boolean {
   );
 }
 
-export function normalizeSdkError(error: unknown): AiError {
-  if (error instanceof AiError) return error;
-  const record =
-    error && typeof error === "object"
-      ? (error as Record<string, unknown>)
-      : {};
+const TIMEOUT_ERROR_CODES = new Set([
+  "ABORT_ERR",
+  "ECONNABORTED",
+  "ETIMEDOUT",
+  "UND_ERR_CONNECT_TIMEOUT",
+  "UND_ERR_HEADERS_TIMEOUT",
+]);
+
+function isTimeoutLike(error: unknown, depth = 0): boolean {
+  if (!error || typeof error !== "object" || depth > 2) return false;
+  const record = error as Record<string, unknown>;
   const status = typeof record.status === "number" ? record.status : undefined;
   const name = typeof record.name === "string" ? record.name : "";
   const code = typeof record.code === "string" ? record.code : "";
@@ -183,20 +200,26 @@ export function normalizeSdkError(error: unknown): AiError {
     typeof (constructorValue as { name?: unknown }).name === "string"
       ? (constructorValue as { name: string }).name
       : "";
-  const cause =
-    record.cause && typeof record.cause === "object"
-      ? (record.cause as Record<string, unknown>)
-      : {};
-  const causeName = typeof cause.name === "string" ? cause.name : "";
   if (
     status === 408 ||
+    name === "AbortError" ||
     name.includes("Timeout") ||
     constructorName.includes("Timeout") ||
-    causeName === "AbortError" ||
-    causeName === "TimeoutError" ||
-    code === "ETIMEDOUT" ||
-    code === "ECONNABORTED"
+    TIMEOUT_ERROR_CODES.has(code)
   ) {
+    return true;
+  }
+  return isTimeoutLike(record.cause, depth + 1);
+}
+
+export function normalizeSdkError(error: unknown): AiError {
+  if (error instanceof AiError) return error;
+  const record =
+    error && typeof error === "object"
+      ? (error as Record<string, unknown>)
+      : {};
+  const status = typeof record.status === "number" ? record.status : undefined;
+  if (isTimeoutLike(error)) {
     return new AiError(ERROR_CODES.MODEL_TIMEOUT, true);
   }
   if (status === 429) {
@@ -346,7 +369,17 @@ export function safeErrorResponse(
   );
 }
 
-export function errorCodeFromUnknown(error: unknown): ErrorCode {
+export function errorCodeFromUnknown(
+  error: unknown,
+  deadlineAt?: number,
+): ErrorCode {
+  if (
+    deadlineAt !== undefined &&
+    getRemainingModelTime(deadlineAt) <= 0 &&
+    (!(error instanceof AiError) || error.code === ERROR_CODES.INTERNAL_ERROR)
+  ) {
+    return ERROR_CODES.MODEL_TIMEOUT;
+  }
   if (error instanceof AiError) return error.code;
   return ERROR_CODES.INTERNAL_ERROR;
 }

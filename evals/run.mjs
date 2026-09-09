@@ -21,10 +21,13 @@ const {
   mergeBranchCriticPartitions,
 } = await import("../src/lib/rules.ts");
 const {
+  AiError,
   consumeSchemaRetry,
+  createReservedAttemptDeadline,
   createRouteDeadline,
   createSchemaRetryBudget,
   DEFAULT_AI_CALL_TIMEOUT_MS,
+  errorCodeFromUnknown,
   getEffectiveAiTimeoutMs,
   getRemainingModelTime,
   isIncompleteStructuredResponse,
@@ -41,6 +44,7 @@ const { ConfirmedCanonFactSchema } = await import(
 const { getInputReadiness, stripBlankItems } = await import(
   "../src/lib/input-readiness.ts"
 );
+const { analyzeInstructions } = await import("../src/lib/prompts.ts");
 
 for (const [routeName, expectation] of Object.entries({
   analyze: {
@@ -54,7 +58,7 @@ for (const [routeName, expectation] of Object.entries({
   branches: {
     callSites: 2,
     totalCalls: 3,
-    maxCalls: 4,
+    maxCalls: 6,
     retryArguments: [1],
     budgetKey: "branches",
     budgetMs: ROUTE_MODEL_BUDGET_MS.branches,
@@ -83,7 +87,7 @@ for (const [routeName, expectation] of Object.entries({
   );
   assert.equal(
     routeSource.match(/\bdeadlineAt,/g)?.length ?? 0,
-    expectation.callSites,
+    routeName === "branches" ? 3 : expectation.callSites,
   );
   assert.match(
     routeSource,
@@ -98,10 +102,16 @@ for (const [routeName, expectation] of Object.entries({
   ].map((match) => Number(match[1]));
   assert.deepEqual(retryArguments, expectation.retryArguments);
   if (routeName === "branches") {
+    assert.match(routeSource, /Promise\.allSettled\(/);
     assert.match(routeSource, /Promise\.all\(/);
     assert.match(routeSource, /slice\(0, 3\)/);
     assert.match(routeSource, /slice\(3, 5\)/);
     assert.match(routeSource, /mergeBranchCriticPartitions/);
+    assert.match(routeSource, /createReservedAttemptDeadline/);
+    assert.match(routeSource, /critic_retry/);
+    assert.match(routeSource, /remainingMs/);
+    assert.match(routeSource, /firstCriticResults\.map/);
+    assert.match(routeSource, /!error\.retryable/);
     assert.equal(
       routeSource.match(/criticBatches\.map/g)?.length ?? 0,
       1,
@@ -111,7 +121,7 @@ for (const [routeName, expectation] of Object.entries({
     assert.doesNotMatch(routeSource, /createSchemaRetryBudget\(0\)/);
   }
   assert.equal(expectation.totalCalls, routeName === "branches" ? 3 : expectation.callSites);
-  assert.equal(expectation.maxCalls, routeName === "analyze" ? 2 : routeName === "branches" ? 4 : 4);
+  assert.equal(expectation.maxCalls, routeName === "analyze" ? 2 : routeName === "branches" ? 6 : 4);
 }
 assert.equal(DEFAULT_AI_CALL_TIMEOUT_MS, 180_000);
 assert.deepEqual(ROUTE_MODEL_BUDGET_MS, {
@@ -123,6 +133,18 @@ assert.equal(createRouteDeadline(1_000, 190_000), 191_000);
 assert.equal(getRemainingModelTime(191_000, 1_000), 190_000);
 assert.equal(getRemainingModelTime(191_000, 191_000), 0);
 assert.equal(getRemainingModelTime(191_000, 191_001), 0);
+assert.equal(
+  createReservedAttemptDeadline(286_000, 75_000, 30_000, 1_000),
+  211_000,
+);
+assert.equal(
+  createReservedAttemptDeadline(106_000, 75_000, 30_000, 1_000),
+  106_000,
+);
+assert.equal(
+  createReservedAttemptDeadline(106_001, 75_000, 30_000, 1_000),
+  31_001,
+);
 assert.equal(
   isIncompleteStructuredResponse({ status: "incomplete", output_text: "{}" }),
   true,
@@ -172,6 +194,26 @@ assert.match(
 const byId = (id) => cases.find((item) => item.id === id);
 const intentOf = (id) => byId(id).input;
 const analyzePayload = (intent) => ({ intent, clarificationAnswers: [] });
+
+const initialAnalyzePrompt = analyzeInstructions(analyzePayload(intentOf("C01")));
+assert.match(initialAnalyzePrompt, /源时间线事件/);
+assert.match(initialAnalyzePrompt, /评价性负面描述/);
+assert.match(initialAnalyzePrompt, /去重/);
+assert.match(initialAnalyzePrompt, /无硬性要求/);
+assert.doesNotMatch(initialAnalyzePrompt, /咒术回战|五条悟|宿傩/);
+const answeredAnalyzePrompt = analyzeInstructions({
+  intent: intentOf("C01"),
+  clarificationAnswers: [
+    {
+      questionId: "q1",
+      question: "死因是否有硬性要求？",
+      answer: "无硬性要求，重点是过渡连续、不生硬。",
+    },
+  ],
+});
+assert.match(answeredAnalyzePrompt, /已经包含用户对前轮问题的回答/);
+assert.match(answeredAnalyzePrompt, /不要再次追问已经回答的可选细节/);
+assert.match(answeredAnalyzePrompt, /只有未回答的细节会造成/);
 
 assert.equal(cases.length, 8, "cases.json must contain C01-C08");
 assert.deepEqual(
@@ -660,6 +702,30 @@ const causeTimeout = normalizeSdkError({
 });
 assert.equal(causeTimeout.code, "MODEL_TIMEOUT");
 assert.equal(causeTimeout.retryable, true);
+assert.equal(normalizeSdkError({ name: "AbortError" }).code, "MODEL_TIMEOUT");
+assert.equal(
+  normalizeSdkError({ cause: { code: "ABORT_ERR" } }).code,
+  "MODEL_TIMEOUT",
+);
+assert.equal(
+  normalizeSdkError({ cause: { code: "UND_ERR_HEADERS_TIMEOUT" } }).code,
+  "MODEL_TIMEOUT",
+);
+assert.equal(
+  normalizeSdkError({ cause: { code: "UND_ERR_CONNECT_TIMEOUT" } }).code,
+  "MODEL_TIMEOUT",
+);
+assert.equal(
+  errorCodeFromUnknown(new Error("deadline unknown"), Date.now() - 1),
+  "MODEL_TIMEOUT",
+);
+assert.equal(
+  errorCodeFromUnknown(
+    new AiError("INTERNAL_ERROR", true),
+    Date.now() - 1,
+  ),
+  "MODEL_TIMEOUT",
+);
 
 const panels = [
   "original_tension",

@@ -254,8 +254,18 @@ const payloadReminder =
 const conciseOutput =
   "所有必需内容都要完整，但表达简洁，不展开解释或思维过程。";
 
-export function analyzeInstructions(_request: AnalyzeRequest): string {
-  return `${safety}\n${payloadReminder}\n${conciseOutput}\n\nExtract direct facts, clearly label model inferences as assumptions, ask at most three useful clarification questions, and report hard conflicts. If conflicts is non-empty, canContinueWithAssumptions must be false; otherwise it must be true.`;
+export function analyzeInstructions(request: AnalyzeRequest): string {
+  const clarificationPolicy =
+    request.clarificationAnswers.length > 0
+      ? "本次请求已经包含用户对前轮问题的回答。将这些回答视为已解决的用户意图：按 questionId 和语义主题去重，不要再次追问已经回答的可选细节；只有未回答的细节会造成无法用明确 ai_suggested 假设继续的硬冲突时，才允许提出新问题。"
+      : "本次请求没有前轮回答；只提出确实影响硬约束或继续条件的澄清问题，不要为了可选细节反复追问。";
+  return `${safety}\n${payloadReminder}\n${conciseOutput}\n
+分析语义规则：
+1. 从 plotContext、regret 和 mustHaves 中区分“源时间线事件”和“评价性负面描述”。原作中发生过的角色、行动、地点、时间等事件可以作为原作源时间线事实；但 regret 中的“突兀、突然反转、缺少铺垫、无法接受”等评价性属性，如果正是 must-have 要改写的对象，就不能标记为 IF 线必须保留的 canon 事实，应将其视为待改写的遗憾或用户意图边界。
+2. 对语义重叠的 factDrafts 去重，避免把同一事件或同一要求拆成互相重复的 canon facts。直接来自用户的事实保持 direct_user_input；模型推断只能标记为 model_inference/assumption。
+3. clarificationAnswers 中“无硬性要求”或等价回答只是范围边界，不是新的 canon 事实；不得把它提升为必须保留的事件、角色设定或世界规则。用户明确允许的结果也不要改写成比用户更强的必达要求。
+4. ${clarificationPolicy}
+5. conflicts 非空时 canContinueWithAssumptions 必须为 false；没有无法化解的硬冲突时 canContinueWithAssumptions 必须为 true，且优先用清晰标记的假设继续。问题最多三个。`;
 }
 
 export function branchGeneratorInstructions(_request: BranchesRequest): string {
