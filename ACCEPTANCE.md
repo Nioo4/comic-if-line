@@ -53,7 +53,7 @@
 | GitHub 本次重命名提交 push | PASS | 重命名提交与部署引用提交均已推送；核验时本地分支与 `origin/main` 对齐；未使用 force push。 |
 | Vercel 临时公开部署 | BLOCKED | D041 在临时 Linux 容器中 `npm ci` 和 Next build PASS，上传进度完成（约 1.8MB）；匿名远端 builder 因计划限制失败，历史临时路径不作为 production 证据。 |
 | Vercel 临时匿名部署 | BLOCKED | `BLOCKED_PLAN`：匿名计划只接受 1–60 秒，而三条 Route 固定为 `maxDuration=300`；不为假上线降低产品时限设计。 |
-| 正式 Vercel 公网部署 | PASS | Vercel project `nioo4s-projects/comic-if-line`，project id `prj_3jFl5xENw4ijm17w3qcNLDqYKv97`；新 production deployment `comic-if-line-p8u6cwgfv-nioo4s-projects.vercel.app` 为 `READY`，canonical alias 为 [https://comic-if-line.vercel.app](https://comic-if-line.vercel.app)。旧主域、旧团队域、旧 git-main 域三个显式 alias 已删除；历史 immutable deployment 不删除、不作为当前地址。完整 branches/storyboard 公网验收仍未完成。 |
+| 正式 Vercel 公网部署 | PASS | Vercel project `nioo4s-projects/comic-if-line`，project id `prj_3jFl5xENw4ijm17w3qcNLDqYKv97`；最新 production deployment `comic-if-line-4qu9qe38s-nioo4s-projects.vercel.app` 为 `READY`，永久、已验证 project domain/canonical alias 为 [https://comic-if-line.vercel.app](https://comic-if-line.vercel.app)。旧主域、旧团队域、旧 git-main 域均不在当前 alias list；历史 immutable deployment 不删除、不作为当前地址。完整 branches/storyboard 公网验收仍未完成。 |
 | 核心路径演示视频 | NOT_DONE | 原 `v0.1-demo` Release 及视频 asset 经用户审核不合格已删除，不再作为有效交付证据；待重新制作并重新验收。 |
 | 不超过 5 分钟完整端到端录屏 | NOT_RUN | 历史核心路径视频不等同于完整端到端演示；待重新制作并重新录制。 |
 
