@@ -1,10 +1,10 @@
 # 意难平 IF 验收记录
 
-当前整体状态：尚未 Done。Vercel 公网部署因 CLI 认证阻塞，完整端到端公开录屏仍未完成；核心路径演示已单独发布，不能替代完整流程或稳定性证据。
+当前整体状态：尚未 Done。Vercel 公网部署因预构建部署准备阶段的 symlink 权限错误阻塞，完整端到端公开录屏仍未完成；核心路径演示已单独发布，不能替代完整流程或稳定性证据。
 
 - 验收开始：`2026-09-09 03:57:41 +08:00`
-- 本轮记录时刻：`2026-09-09 08:21:33 +08:00`
-- 截至本轮记录实际投入：`4 小时 23 分 52 秒`（从上述开始时间计算）
+- 本轮记录时刻：`2026-09-09 08:30:35 +08:00`
+- 截至本轮记录实际投入：`4 小时 32 分 54 秒`（从上述开始时间计算）
 - 说明：最终交付结束时间和总投入待线上部署后更新；达到 5 小时必须停止并如实提交状态。
 - 外部验收截图：`D:\新建文件夹\恺英笔试\acceptance-artifacts`（仓库外，不提交）。
 
@@ -38,8 +38,8 @@
 | --- | --- | --- |
 | GitHub 公共仓库 | PASS | `https://github.com/Nioo4/yinanping-if`；2026-09-09 08:07:22 +08:00 创建并确认 `isPrivate=false`。 |
 | GitHub 初始提交 push | PASS | `HEAD:main` 已推送；远端 `main` 指向提交 `bb693f0d6bdd64fb013726805bc1904002964997`，并由 `gh repo view` 验证 URL 可见、`isPrivate=false`。未使用 force push。 |
-| Vercel 临时公开部署 | BLOCKED | 官方 CLI `vercel deploy --temporary --yes` exit code 1，错误类别为 auth；未产生 deployment/claim URL，未把它写成上线。 |
-| 正式 Vercel 公网部署 | BLOCKED | `BLOCKED_AUTH/NOT_DONE`：当前未登录 Vercel，待后续授权后使用托管平台环境变量部署。 |
+| Vercel 临时公开部署 | BLOCKED | D040 使用 `--temporary --prebuilt --yes --no-color --json` exit code 1；脱敏原文为 `Prebuilt deployment cannot be created because vercel build failed`，随后 `Error: EPERM: operation not permitted, symlink 'analyze.func' -> '.vercel\\output\\functions\\api\\branches.func'`；未产生 deployment/claim URL，未把它写成上线。 |
+| 正式 Vercel 公网部署 | BLOCKED | `BLOCKED_BUILD/NOT_DONE`：预构建部署准备阶段无法创建 symlink，待在有相应权限的部署环境中重新构建/部署并使用托管平台环境变量。 |
 | 核心路径演示视频 | PASS | 已发布至 [Release v0.1-demo](https://github.com/Nioo4/yinanping-if/releases/tag/v0.1-demo)，只上传该核心路径视频；失败的完整端到端录屏未上传。 |
 | 不超过 5 分钟完整端到端录屏 | NOT_RUN | 核心路径视频不等同于完整端到端演示；待正式部署并重新录制。 |
 
