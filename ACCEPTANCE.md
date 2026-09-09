@@ -39,7 +39,7 @@
 | production 环境配置 | PASS | 已配置四个变量名：`DEEPSEEK_BASE_URL`、`DEEPSEEK_API_KEY`（sensitive）、`AI_CALL_TIMEOUT_MS`、`MAX_REQUEST_BYTES`（config）；不记录值。 |
 | production GET（agent） | PASS | 改名前历史 production alias HTTP 200，标题包含“让遗憾拥有另一条可信的路”；当前地址见下方新名称交付记录。 |
 | production GET（改名后） | BLOCKED | 当前 canonical alias 为 `https://comic-if-line.vercel.app/`；直接 HTTP 200 返回 Vercel 登录页而非应用 HTML，`vercel curl` 生成临时 bypass 后本机连接超时，未取得页面 title/中文名称证据；不据此声称公网页面验收通过。 |
-| production GET（独立复核） | PASS | 独立 HTTP 200，537ms，标题匹配。 |
+| production GET（改名前独立复核） | PASS | 改名前历史 production alias 独立 HTTP 200，537ms，标题匹配；该证据不代表改名后页面通过。 |
 | production `/api/analyze` | PASS | 客户端 HTTP 200、59.639s；7 facts、3 questions、0 conflicts、`canContinue=true`；Vercel 服务端日志 58.736s/status 200，usage input 878 / output 3921 / total 4799。 |
 | production `/api/branches` | PARTIAL | 客户端在 142.697s 发生本地传输中断、无 HTTP 响应；Vercel 服务端日志显示 153.732s/status 200，usage input 4384 / output 12069 / total 16453。未验证公网响应体结构，不能写完整端到端 PASS；结合本地真实结构成功样本保留为服务端部分通过。 |
 | production `/api/storyboard` | NOT_RUN | 本机后续 vercel.app DNS/连接不稳定，未做公网 storyboard；本地真实 storyboard PASS 证据保留在上方，不冒充公网验收。 |
@@ -50,7 +50,7 @@
 | 交付项 | 状态 | 地址/说明 |
 | --- | --- | --- |
 | GitHub 公共仓库 | PASS | [https://github.com/Nioo4/comic-if-line](https://github.com/Nioo4/comic-if-line)；已确认 `isPrivate=false`。平台保留的旧 URL redirect 属 GitHub 历史机制，不作为当前地址。 |
-| GitHub 本次重命名提交 push | PASS | `master:main` 已推送；远端 `main` 与本地 HEAD `505dbd9adcebbe13fb2aceb2782d3a7be3685014` 一致；未使用 force push。 |
+| GitHub 本次重命名提交 push | PASS | 重命名提交与部署引用提交均已推送；核验时本地分支与 `origin/main` 对齐；未使用 force push。 |
 | Vercel 临时公开部署 | BLOCKED | D041 在临时 Linux 容器中 `npm ci` 和 Next build PASS，上传进度完成（约 1.8MB）；匿名远端 builder 因计划限制失败，历史临时路径不作为 production 证据。 |
 | Vercel 临时匿名部署 | BLOCKED | `BLOCKED_PLAN`：匿名计划只接受 1–60 秒，而三条 Route 固定为 `maxDuration=300`；不为假上线降低产品时限设计。 |
 | 正式 Vercel 公网部署 | PASS | Vercel project `nioo4s-projects/comic-if-line`，project id `prj_3jFl5xENw4ijm17w3qcNLDqYKv97`；新 production deployment `comic-if-line-p8u6cwgfv-nioo4s-projects.vercel.app` 为 `READY`，canonical alias 为 [https://comic-if-line.vercel.app](https://comic-if-line.vercel.app)。旧主域、旧团队域、旧 git-main 域三个显式 alias 已删除；历史 immutable deployment 不删除、不作为当前地址。完整 branches/storyboard 公网验收仍未完成。 |
