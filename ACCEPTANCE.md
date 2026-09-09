@@ -1,6 +1,6 @@
 # 漫画IF线验收记录
 
-当前整体状态：尚未 Done。漫画IF线新名称 production 已 Ready，但匿名公网 GET 当前被 Vercel Deployment Protection 返回登录页，且本机 `vercel curl` 连接超时；完整端到端公开录屏、branches 公网响应体和 storyboard 公网验收仍未完成。原核心路径演示 Release 经用户审核不合格已删除，原视频不再作为有效交付证据，演示视频交付恢复为待重新制作/`NOT_DONE`；历史 production analyze 证据不能替代新名称完整流程或稳定性证据。
+当前整体状态：尚未 Done。漫画IF线新名称 production 已 Ready；永久 project domain 配置后由主 Agent 独立复核匿名公网 GET 为 PASS：HTTP 200、最终 URI 仍为 `https://comic-if-line.vercel.app/`、HTML title 为“漫画IF线”、包含产品名称且不是 Vercel 登录页。但尚未调用新名称的 analyze/branches/storyboard，完整端到端公开录屏、branches 公网响应体和 storyboard 公网验收仍未完成。原核心路径演示 Release 经用户审核不合格已删除，原视频不再作为有效交付证据，演示视频交付恢复为待重新制作/`NOT_DONE`；历史 production analyze 证据不能替代新名称完整流程或稳定性证据。
 
 - 验收开始：`2026-09-09 03:57:41 +08:00`
 - 初始收口记录时刻：`2026-09-09 08:48:25 +08:00`
@@ -38,7 +38,7 @@
 | production deployment | PASS | 本次统一命名前的 Vercel 历史部署，当前地址见下方新名称交付记录；build 31s、Node 24.x、function timeout 300s。 |
 | production 环境配置 | PASS | 已配置四个变量名：`DEEPSEEK_BASE_URL`、`DEEPSEEK_API_KEY`（sensitive）、`AI_CALL_TIMEOUT_MS`、`MAX_REQUEST_BYTES`（config）；不记录值。 |
 | production GET（agent） | PASS | 改名前历史 production alias HTTP 200，标题包含“让遗憾拥有另一条可信的路”；当前地址见下方新名称交付记录。 |
-| production GET（改名后） | BLOCKED | 当前 canonical alias 为 `https://comic-if-line.vercel.app/`；直接 HTTP 200 返回 Vercel 登录页而非应用 HTML，`vercel curl` 生成临时 bypass 后本机连接超时，未取得页面 title/中文名称证据；不据此声称公网页面验收通过。 |
+| production GET（改名后） | PASS | 永久 project domain 配置后由主 Agent 独立复核：HTTP 200，最终 URI 仍为 `https://comic-if-line.vercel.app/`，HTML title 为“漫画IF线”，包含产品名称且不是 Vercel 登录页。该证据只覆盖页面 GET；尚未调用新名称的 analyze/branches/storyboard。 |
 | production GET（改名前独立复核） | PASS | 改名前历史 production alias 独立 HTTP 200，537ms，标题匹配；该证据不代表改名后页面通过。 |
 | production `/api/analyze` | PASS | 客户端 HTTP 200、59.639s；7 facts、3 questions、0 conflicts、`canContinue=true`；Vercel 服务端日志 58.736s/status 200，usage input 878 / output 3921 / total 4799。 |
 | production `/api/branches` | PARTIAL | 客户端在 142.697s 发生本地传输中断、无 HTTP 响应；Vercel 服务端日志显示 153.732s/status 200，usage input 4384 / output 12069 / total 16453。未验证公网响应体结构，不能写完整端到端 PASS；结合本地真实结构成功样本保留为服务端部分通过。 |
@@ -57,7 +57,7 @@
 | 核心路径演示视频 | NOT_DONE | 原 `v0.1-demo` Release 及视频 asset 经用户审核不合格已删除，不再作为有效交付证据；待重新制作并重新验收。 |
 | 不超过 5 分钟完整端到端录屏 | NOT_RUN | 历史核心路径视频不等同于完整端到端演示；待重新制作并重新录制。 |
 
-用户授权后的 D043 动作已完成：link → 服务端敏感环境变量 → production deploy；本次 D046 命名变更完成 GitHub/Vercel 原地改名和新 production deploy，公网 GET 受 Deployment Protection/本机连接阻塞，未调用真实 analyze/branches/storyboard；branches/storyboard 仍另行验收，当前整体仍为 `NOT_DONE`。正式授权链接不会写入文档。
+用户授权后的 D043 动作已完成：link → 服务端敏感环境变量 → production deploy；本次 D046 命名变更完成 GitHub/Vercel 原地改名和新 production deploy，永久 project domain 配置后主 Agent 独立复核匿名公网 GET 为 PASS（HTTP 200、最终 URI 同域、title 为“漫画IF线”、非 Vercel 登录页），但尚未调用新名称 analyze/branches/storyboard；branches/storyboard 仍另行验收，当前整体仍为 `NOT_DONE`。正式授权链接不会写入文档。
 
 ## 安全与证据边界
 
