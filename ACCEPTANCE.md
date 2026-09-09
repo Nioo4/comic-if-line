@@ -1,6 +1,6 @@
 # 漫画IF线验收记录
 
-当前整体状态：尚未 Done。漫画IF线新名称 production 已 Ready；永久 project domain 配置后由主 Agent 独立复核匿名公网 GET 为 PASS：HTTP 200、最终 URI 仍为 `https://comic-if-line.vercel.app/`、HTML title 为“漫画IF线”、包含产品名称且不是 Vercel 登录页。但尚未调用新名称的 analyze/branches/storyboard，完整端到端公开录屏、branches 公网响应体和 storyboard 公网验收仍未完成。原核心路径演示 Release 经用户审核不合格已删除，原视频不再作为有效交付证据，演示视频交付恢复为待重新制作/`NOT_DONE`；历史 production analyze 证据不能替代新名称完整流程或稳定性证据。
+当前整体状态：尚未 Done。漫画IF线新名称 production 已 Ready；永久 project domain 配置后由主 Agent 独立复核匿名公网 GET 为 PASS：HTTP 200、最终 URI 仍为 `https://comic-if-line.vercel.app/`、HTML title 为“漫画IF线”、包含产品名称且不是 Vercel 登录页。D047 production 输入门禁 PASS：真实 Chromium 页面能在 must-have 留空时明确阻止 `/api/analyze`，未调用模型且未替用户补目标。但尚未调用新名称的完整 analyze/branches/storyboard 流程，完整端到端公开录屏、branches 公网响应体和 storyboard 公网验收仍未完成。原核心路径演示 Release 经用户审核不合格已删除，原视频不再作为有效交付证据，演示视频交付恢复为待重新制作/`NOT_DONE`；历史 production analyze 证据不能替代新名称完整流程或稳定性证据。
 
 - 验收开始：`2026-09-09 03:57:41 +08:00`
 - 初始收口记录时刻：`2026-09-09 08:48:25 +08:00`
@@ -26,9 +26,10 @@
 | 验收项 | 状态 | 证据/说明 |
 | --- | --- | --- |
 | 三项 readiness、非字符数门槛和空白重复列表行的纯本地断言 | PASS | `npm run eval`；覆盖背景/遗憾/必须结果的结构性非空、缺项名称和空白列表过滤。 |
-| 输入页显示指南、三项 readiness、实时已填写/待补充状态，缺项时按钮禁用且 `requestBeforeReady=0` | PASS | 本地真实 Chromium；初始空白页清楚显示指南与 readiness，缺项时未发 `/api/analyze`；证据截图：[d047-input-desktop-full.png](../acceptance-artifacts/d047-input-desktop-full.png)（1440×2321）、[d047-input-mobile-full.png](../acceptance-artifacts/d047-input-mobile-full.png)（390×2719）。 |
+| 输入页显示指南、三项 readiness、实时已填写/待补充状态，缺项时按钮禁用且 `requestBeforeReady=0` | PASS | 本地真实 Chromium；初始空白页清楚显示指南与 readiness，缺项时未发 `/api/analyze`；证据截图：`D:\新建文件夹\恺英笔试\acceptance-artifacts\d047-input-desktop-full.png`、`D:\新建文件夹\恺英笔试\acceptance-artifacts\d047-input-mobile-full.png`（仓库外、不提交；分别 1440×2321、390×2719）。 |
 | 填满三项后允许提交，额外空白 must-have/preference/constraint 被过滤 | PASS | 本地真实 Chromium；模型请求被控制拦截，拦截到的 payload 数量为 `1/0/0`（must-have/preference/constraint），未调用真实模型。 |
 | `MODEL_UNAVAILABLE` 控制响应显示 service note，`INVALID_INPUT` 控制响应没有 service note | PASS | 本地真实 Chromium 控制响应；只验证前端错误分流，不冒充真实线上故障。 |
+| production 输入门禁：空白 must-have 不得发起 analyze | PASS | 主 Agent 独立真实 Chromium；canonical production GET HTTP 200，HTML title 为“漫画IF线”。按用户原样输入 `workTitle=咒术回站`、`plotContext=新宿决战 五条悟打宿傩`、`regret=五条悟被腰斩。原因是五条悟的设定一直是最强 在于宿傩的对战中见招拆招处于上风但是在优势最大的那一刻宣布胜利后突然被腰斩 令人无法接受`，must-have 留空；页面显示“还需补充：至少一条 IF 线必须实现的结果。”，提交按钮 disabled，`/api/analyze` request count=0。未调用模型，未替用户补目标。 |
 
 ## 真实浏览器与 API 证据
 
