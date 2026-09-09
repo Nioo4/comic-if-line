@@ -60,6 +60,6 @@ npm run eval
 
 ## 交付链接
 
-- GitHub 仓库 URL：[https://github.com/Nioo4/yinanping-if](https://github.com/Nioo4/yinanping-if)（public 仓库已创建；首个提交 push 受当前 GitHub HTTPS 网络连接阻断，待恢复后补推）
+- GitHub 仓库 URL：[https://github.com/Nioo4/yinanping-if](https://github.com/Nioo4/yinanping-if)（public 仓库与首个提交已验证可见）
 - 公共 Vercel URL：验收后补
 - 不超过 5 分钟录屏：验收后补

@@ -3,8 +3,8 @@
 当前整体状态：尚未 Done。Vercel 公网部署、公开演示录屏和最终线上交付仍未完成；这些项目保持 `NOT_RUN`，不以本地证据替代。
 
 - 验收开始：`2026-09-09 03:57:41 +08:00`
-- 本轮记录时刻：`2026-09-09 08:14:22 +08:00`
-- 截至本轮记录实际投入：`4 小时 16 分 41 秒`（从上述开始时间计算）
+- 本轮记录时刻：`2026-09-09 08:16:26 +08:00`
+- 截至本轮记录实际投入：`4 小时 18 分 45 秒`（从上述开始时间计算）
 - 说明：最终交付结束时间和总投入待线上部署后更新；达到 5 小时必须停止并如实提交状态。
 - 外部验收截图：`D:\新建文件夹\恺英笔试\acceptance-artifacts`（仓库外，不提交）。
 
@@ -36,7 +36,7 @@
 | 交付项 | 状态 | 地址/说明 |
 | --- | --- | --- |
 | GitHub 公共仓库 | PASS | `https://github.com/Nioo4/yinanping-if`；2026-09-09 08:07:22 +08:00 创建并确认 `isPrivate=false`。 |
-| GitHub 初始提交 push | BLOCKED | 已配置 `origin`，但本轮多次 HTTPS push 均因无法连接 GitHub `443`（connection reset / failed to connect）失败；未 force push，提交 `1156dd7f7d665e824ce3f284203b4cf84afe482a` 保留在本地，待网络恢复后补推。 |
+| GitHub 初始提交 push | PASS | `HEAD:main` 已推送；远端 `main` 指向提交 `261c89ad4f83fcb78952e21c9640a9789f3147af`，并由 `gh repo view` 验证 URL 可见、`isPrivate=false`。未使用 force push。 |
 | Vercel 公网部署 | NOT_RUN | 待主 Agent 完成本地验收后部署。 |
 | 不超过 5 分钟录屏 | NOT_RUN | 待部署和录制后更新。 |
 
