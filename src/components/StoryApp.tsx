@@ -27,6 +27,7 @@ import {
   type StoryIntent,
 } from "../lib/contracts.ts";
 import { demoStory } from "../data/demo-story.ts";
+import { getInputReadiness, stripBlankItems } from "../lib/input-readiness.ts";
 import { clearSession, readSession, writeSession } from "../lib/session.ts";
 import ErrorBanner from "./ErrorBanner.tsx";
 import InputStep from "./InputStep.tsx";
@@ -341,7 +342,7 @@ async function postJson<T>(path: string, payload: unknown): Promise<ApiResult<T>
       ok: false,
       error: {
         code: ERROR_CODES.INTERNAL_ERROR,
-        message: "请求没有完成，请稍后重试。",
+        message: "页面检查已通过，但故事服务没有返回可读取的结果，请稍后重试。",
         retryable: true,
       },
     };
@@ -350,7 +351,7 @@ async function postJson<T>(path: string, payload: unknown): Promise<ApiResult<T>
       ok: false,
       error: {
         code: ERROR_CODES.MODEL_UNAVAILABLE,
-        message: "暂时无法连接故事模型，请稍后重试。",
+        message: "暂时无法连接故事服务，请稍后重试。",
         retryable: true,
       },
     };
@@ -365,9 +366,9 @@ function normalizedIntent(input: StoryIntent): StoryIntent {
   return {
     plotContext: input.plotContext.trim(),
     regret: input.regret.trim(),
-    mustHaves: input.mustHaves.map((item) => ({ ...item, text: item.text.trim() })),
-    preferences: input.preferences.map((item) => ({ ...item, text: item.text.trim() })),
-    constraints: input.constraints.map((item) => ({ ...item, text: item.text.trim() })),
+    mustHaves: stripBlankItems(input.mustHaves).map((item) => ({ ...item, text: item.text.trim() })),
+    preferences: stripBlankItems(input.preferences).map((item) => ({ ...item, text: item.text.trim() })),
+    constraints: stripBlankItems(input.constraints).map((item) => ({ ...item, text: item.text.trim() })),
     ...(input.desiredTone?.trim() ? { desiredTone: input.desiredTone.trim() } : {}),
   };
 }
@@ -421,12 +422,20 @@ export default function StoryApp() {
   };
 
   const startAnalyze = async (rawIntent: StoryIntent, stablePhase: StablePhase) => {
+    const readiness = getInputReadiness(rawIntent);
+    if (!readiness.ready) {
+      dispatch({
+        type: "ERROR",
+        error: localError(`还需补充：${readiness.missing.join("、")}。请按页面最低标准填写后再开始分析。`),
+      });
+      return;
+    }
     const intent = normalizedIntent(rawIntent);
     const intentCheck = StoryIntentSchema.safeParse(intent);
     if (!intentCheck.success) {
       dispatch({
         type: "ERROR",
-        error: localError("请补全故事背景、遗憾和至少一条必须保留的结果。"),
+        error: localError("输入字段未通过检查，请确认故事背景、遗憾及原因和至少一条 IF 线必须实现的结果均已填写。"),
       });
       return;
     }

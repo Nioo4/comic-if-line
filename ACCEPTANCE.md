@@ -21,6 +21,15 @@
 | `npm run build` | PASS | Next.js 构建成功；`/` 为静态页面，三个 API Route 为动态路由。 |
 | `npm run eval` | PASS | `8 cases and core rule checks`。 |
 
+## 本次输入页最低标准与错误分流验收（D047）
+
+| 验收项 | 状态 | 证据/说明 |
+| --- | --- | --- |
+| 三项 readiness、非字符数门槛和空白重复列表行的纯本地断言 | PASS | `npm run eval`；覆盖背景/遗憾/必须结果的结构性非空、缺项名称和空白列表过滤。 |
+| 输入页显示指南、三项 readiness、实时已填写/待补充状态，缺项时按钮禁用且 `requestBeforeReady=0` | PASS | 本地真实 Chromium；初始空白页清楚显示指南与 readiness，缺项时未发 `/api/analyze`；证据截图：[d047-input-desktop-full.png](../acceptance-artifacts/d047-input-desktop-full.png)（1440×2321）、[d047-input-mobile-full.png](../acceptance-artifacts/d047-input-mobile-full.png)（390×2719）。 |
+| 填满三项后允许提交，额外空白 must-have/preference/constraint 被过滤 | PASS | 本地真实 Chromium；模型请求被控制拦截，拦截到的 payload 数量为 `1/0/0`（must-have/preference/constraint），未调用真实模型。 |
+| `MODEL_UNAVAILABLE` 控制响应显示 service note，`INVALID_INPUT` 控制响应没有 service note | PASS | 本地真实 Chromium 控制响应；只验证前端错误分流，不冒充真实线上故障。 |
+
 ## 真实浏览器与 API 证据
 
 | 验收项 | 状态 | 证据/说明 |

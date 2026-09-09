@@ -15,8 +15,12 @@ const errorLabels: Record<SafeError["code"], string> = {
   MODEL_NOT_CONFIGURED: "模型尚未配置",
   MODEL_UNAVAILABLE: "模型暂时不可用",
   MODEL_TIMEOUT: "模型响应超时",
-  INTERNAL_ERROR: "请求没有完成",
+  INTERNAL_ERROR: "服务请求未完成",
 };
+
+function isServiceFailure(error: SafeError) {
+  return error.code === "INTERNAL_ERROR" || error.code.startsWith("MODEL_");
+}
 
 export default function ErrorBanner({ error, onRetry }: ErrorBannerProps) {
   return (
@@ -24,6 +28,12 @@ export default function ErrorBanner({ error, onRetry }: ErrorBannerProps) {
       <div>
         <p className="section-kicker">{errorLabels[error.code]}</p>
         <p className="error-message">{error.message}</p>
+        {isServiceFailure(error) ? (
+          <p className="service-error-note">
+            这类错误发生在服务处理阶段，不代表你的描述不够完整，也不需要反复修改内容。
+            {error.retryable ? "可以按相同内容重试。" : "请稍后再试或联系维护者检查服务配置。"}
+          </p>
+        ) : null}
         {error.requestId ? (
           <p className="request-id">请求编号：{error.requestId}</p>
         ) : null}

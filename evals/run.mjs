@@ -38,6 +38,9 @@ const { restoreSession, serializeSession } = await import(
 const { ConfirmedCanonFactSchema } = await import(
   "../src/lib/contracts.ts"
 );
+const { getInputReadiness, stripBlankItems } = await import(
+  "../src/lib/input-readiness.ts"
+);
 
 for (const [routeName, expectation] of Object.entries({
   analyze: {
@@ -188,6 +191,28 @@ for (const id of ["C01", "C02", "C03", "C04", "C05", "C06", "C07", "C08"]) {
 
 const blankIntent = { ...intentOf("C01"), plotContext: "   " };
 assert.equal(checkAnalyzeRequest(analyzePayload(blankIntent)).ok, false);
+
+const readinessBase = {
+  plotContext: "人物在关键阶段面对一个尚未解决的冲突。",
+  regret: "原本的结果让人无法接受，因为关键选择没有得到合理回应。",
+  mustHaves: [{ id: "m1", text: "两人最终说清真正原因" }],
+  preferences: [],
+  constraints: [],
+};
+assert.equal(getInputReadiness(readinessBase).ready, true);
+assert.deepEqual(getInputReadiness({ ...readinessBase, plotContext: "  " }).missing, ["故事背景"]);
+assert.deepEqual(
+  getInputReadiness({ ...readinessBase, mustHaves: [{ id: "m1", text: "  " }] }).missing,
+  ["至少一条 IF 线必须实现的结果"],
+);
+assert.deepEqual(
+  stripBlankItems([
+    { id: "p1", text: "保留" },
+    { id: "p2", text: " \t" },
+  ]).map((item) => item.id),
+  ["p1"],
+  "blank optional list rows must be ignored rather than blocking submission",
+);
 
 const oversizedIntent = {
   ...intentOf("C08"),
@@ -841,6 +866,12 @@ const uiSources = [
   "../src/components/BranchChoiceStep.tsx",
   "../src/components/StoryboardStep.tsx",
 ].map((relativePath) => fs.readFileSync(path.join(here, relativePath), "utf8"));
+const storyAppSource = uiSources[0];
+const inputStepSource = uiSources[1];
+const errorBannerSource = fs.readFileSync(
+  path.join(here, "../src/components/ErrorBanner.tsx"),
+  "utf8",
+);
 assert.match(uiSources[0], /useReducer/);
 assert.match(uiSources[0], /\/api\/analyze/);
 assert.match(uiSources[0], /\/api\/branches/);
@@ -850,5 +881,17 @@ assert.match(uiSources[1], /SessionDraft/);
 assert.match(uiSources[2], /locked: true/);
 assert.match(uiSources[3], /candidate\.newAssumptions/);
 assert.match(uiSources[4], /StoryIntent/);
+assert.match(inputStepSource, /开始分析前的最低标准/);
+assert.match(inputStepSource, /ready/);
+assert.match(inputStepSource, /disabled \|\| !readiness\.ready/);
+assert.match(storyAppSource, /stripBlankItems/);
+assert.match(storyAppSource, /页面检查已通过，但故事服务没有返回可读取的结果/);
+assert.match(errorBannerSource, /startsWith\("MODEL_"\)/);
+assert.match(errorBannerSource, /不代表你的描述不够完整/);
+assert.match(errorBannerSource, /error\.code === "INTERNAL_ERROR"/);
+assert.doesNotMatch(
+  errorBannerSource.slice(errorBannerSource.indexOf("function isServiceFailure")),
+  /INVALID_INPUT/,
+);
 
 console.log(`Deterministic eval PASS: ${cases.length} cases and core rule checks.`);

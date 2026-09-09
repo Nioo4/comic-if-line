@@ -1,4 +1,5 @@
 import type { SessionDraft, StoryIntent } from "../lib/contracts.ts";
+import { getInputReadiness } from "../lib/input-readiness.ts";
 
 type InputStepProps = {
   workTitle: string;
@@ -20,6 +21,7 @@ function ListEditor({
   label,
   hint,
   prefix,
+  itemPlaceholder,
   items,
   disabled,
   minimum,
@@ -28,6 +30,7 @@ function ListEditor({
   label: string;
   hint: string;
   prefix: string;
+  itemPlaceholder?: string;
   items: SessionDraft["mustHaves"];
   disabled: boolean;
   minimum?: number;
@@ -47,7 +50,7 @@ function ListEditor({
             type="text"
             value={item.text}
             disabled={disabled}
-            placeholder={`${label}第 ${index + 1} 项`}
+            placeholder={itemPlaceholder ?? `${label}第 ${index + 1} 项`}
             onChange={(event) =>
               onChange(
                 items.map((current) =>
@@ -92,6 +95,8 @@ export default function InputStep({
   onLoadDemo,
   onSubmit,
 }: InputStepProps) {
+  const readiness = getInputReadiness(intent);
+
   const setField = <K extends keyof SessionDraft>(
     key: K,
     value: SessionDraft[K],
@@ -121,6 +126,25 @@ export default function InputStep({
         </button>
       </div>
 
+      <aside className="input-guide" aria-labelledby="input-guide-title">
+        <p className="section-kicker">开始分析前的最低标准</p>
+        <h3 id="input-guide-title">先说清三件事</h3>
+        <ol>
+          <li>
+            <strong>故事背景：</strong>通常 2—4 句，让人看懂关键人物、当前冲突或阶段，以及原本发生的结果。
+          </li>
+          <li>
+            <strong>遗憾及原因：</strong>通常 1—3 句，说明哪个结果不能接受，以及为什么不合理或不满足。
+          </li>
+          <li>
+            <strong>IF 线必须实现的结果：</strong>至少一条具体、可判断“实现了/没实现”的结果；它和遗憾不是同一件事。
+          </li>
+        </ol>
+        <p className="field-hint">
+          这里没有字符数硬门槛，以上句数只是帮助你组织表达。偏好、不能破坏的约束和余韵都可留空，约束也没有条数上限。通过最低检查只代表可以开始分析，不代表信息已经完整；后续缺口会由 AI 用 1—3 个问题补齐。
+        </p>
+      </aside>
+
       <label className="field-label" htmlFor="work-title">
         作品或场景名 <span className="optional">可选</span>
       </label>
@@ -145,23 +169,26 @@ export default function InputStep({
         placeholder="交代人物、时间、地点，以及故事走到哪里。"
         onChange={(event) => setField("plotContext", event.target.value)}
       />
+      <p className="field-hint">通常写 2—4 句：关键人物、当前冲突/阶段、原本发生的结果。</p>
 
       <label className="field-label" htmlFor="regret">
-        最遗憾的瞬间 <span className="required">必填</span>
+        遗憾及原因 <span className="required">必填</span>
       </label>
       <textarea
         id="regret"
         value={intent.regret}
         disabled={disabled}
         rows={3}
-        placeholder="如果当时多做一件事，你希望改变什么？"
+        placeholder="例如：误会没有被当场说开，导致两人错过；这个结果不合理，因为双方当时都有机会确认真相。"
         onChange={(event) => setField("regret", event.target.value)}
       />
+      <p className="field-hint">通常写 1—3 句：哪个结果不能接受，以及为什么不合理/不满足。</p>
 
       <ListEditor
-        label="必须保留的结果"
-        hint="至少写一条。它们是故事不可失去的落点。"
+        label="IF 线必须实现的结果"
+        hint="至少写一条可验证的具体结果；例如“导师在这场战斗后仍然活着”。它不是对遗憾的重复描述。"
         prefix="must-have"
+        itemPlaceholder="例如：导师在这场战斗后仍然活着"
         items={intent.mustHaves}
         minimum={1}
         disabled={disabled}
@@ -196,8 +223,35 @@ export default function InputStep({
         onChange={(event) => setField("desiredTone", event.target.value)}
       />
 
+      <section className="readiness-panel" aria-labelledby="readiness-title" aria-live="polite">
+        <div className="readiness-heading">
+          <div>
+            <p className="section-kicker">提交前检查</p>
+            <h3 id="readiness-title">达到最低标准即可开始分析</h3>
+          </div>
+          <span className={readiness.ready ? "clean-badge" : "dirty-badge"}>
+            {readiness.ready ? "可以开始" : "还需补充"}
+          </span>
+        </div>
+        <ul className="readiness-list">
+          {([
+            ["故事背景", readiness.plotContext],
+            ["遗憾及原因", readiness.regret],
+            ["IF 线必须实现的结果", readiness.mustHaves],
+          ] as const).map(([label, filled]) => (
+            <li className={filled ? "readiness-item ready" : "readiness-item"} key={label}>
+              <span aria-hidden="true">{filled ? "✓" : "○"}</span>
+              <span>{label}：{filled ? "已填写" : "待补充"}</span>
+            </li>
+          ))}
+        </ul>
+        {readiness.missing.length > 0 ? (
+          <p className="readiness-missing">还需补充：{readiness.missing.join("、")}。</p>
+        ) : null}
+      </section>
+
       <div className="form-actions">
-        <button className="button button-primary" type="submit" disabled={disabled}>
+        <button className="button button-primary" type="submit" disabled={disabled || !readiness.ready}>
           开始理解这段遗憾
         </button>
       </div>
