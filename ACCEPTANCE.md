@@ -3,8 +3,8 @@
 当前整体状态：尚未 Done。Vercel 公网部署在匿名远端 builder 阶段因计划限制阻塞，完整端到端公开录屏仍未完成；核心路径演示已单独发布，不能替代完整流程或稳定性证据。
 
 - 验收开始：`2026-09-09 03:57:41 +08:00`
-- 本轮记录时刻：`2026-09-09 08:38:42 +08:00`
-- 截至本轮记录实际投入：`4 小时 41 分 01 秒`（从上述开始时间计算）
+- 本轮记录时刻：`2026-09-09 08:48:25 +08:00`
+- 截至本轮记录实际投入：`4 小时 50 分 44 秒`（从上述开始时间计算）
 - 说明：最终交付结束时间和总投入待线上部署后更新；达到 5 小时必须停止并如实提交状态。
 - 外部验收截图：`D:\新建文件夹\恺英笔试\acceptance-artifacts`（仓库外，不提交）。
 
@@ -37,11 +37,14 @@
 | 交付项 | 状态 | 地址/说明 |
 | --- | --- | --- |
 | GitHub 公共仓库 | PASS | `https://github.com/Nioo4/yinanping-if`；2026-09-09 08:07:22 +08:00 创建并确认 `isPrivate=false`。 |
-| GitHub 初始提交 push | PASS | `HEAD:main` 已推送；远端 `main` 指向提交 `bb693f0d6bdd64fb013726805bc1904002964997`，并由 `gh repo view` 验证 URL 可见、`isPrivate=false`。未使用 force push。 |
+| GitHub 初始提交 push | PASS | `HEAD:main` 已推送；上一轮远端 `main` 指向 `170395a26fdf428e577653867dadfb0493d9f20a`，本次 D042 文档提交会再次更新远端 HEAD，最终 hash 以本轮 push 后核验为准；未使用 force push。 |
 | Vercel 临时公开部署 | BLOCKED | D041 在临时 Linux 容器中 `npm ci` 和 Next build PASS，上传进度完成（约 1.8MB）；匿名远端 builder 返回 `Builder returned invalid maxDuration value for Serverless Function "api/analyze". Serverless Functions must have a maxDuration between 1 and 60 for plan enterprise.`；未产生可用 deployment/claim URL，未把它写成上线。 |
-| 正式 Vercel 公网部署 | BLOCKED | `BLOCKED_PLAN/NOT_DONE`：当前三条 Route 的 `maxDuration=300` 超出匿名计划 1–60 限制，待正式具备相应部署计划/授权后处理。 |
+| Vercel 临时匿名部署 | BLOCKED | `BLOCKED_PLAN`：匿名计划只接受 1–60 秒，而三条 Route 固定为 `maxDuration=300`；不为假上线降低产品时限设计。 |
+| 正式 Vercel 公网部署 | BLOCKED | `BLOCKED_AUTH/NOT_DONE`：主 Agent 已确认 `vercel whoami` 为 Logged out；正式授权链接不会写入本仓库文档。 |
 | 核心路径演示视频 | PASS | 已发布至 [Release v0.1-demo](https://github.com/Nioo4/yinanping-if/releases/tag/v0.1-demo)，只上传该核心路径视频；失败的完整端到端录屏未上传。 |
 | 不超过 5 分钟完整端到端录屏 | NOT_RUN | 核心路径视频不等同于完整端到端演示；待正式部署并重新录制。 |
+
+正式授权后的下一轮动作严格为：link → 服务端敏感环境变量 → production deploy → 公网 GET/analyze；branches/storyboard 另行验收，当前整体仍为 `NOT_DONE`。
 
 ## 安全与证据边界
 
