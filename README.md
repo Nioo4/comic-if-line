@@ -60,9 +60,10 @@ npm run eval
 
 ## 交付链接
 
-- GitHub 仓库 URL：本次统一改名后的公共仓库地址将在改名完成后更新。
+- GitHub 仓库 URL：[https://github.com/Nioo4/comic-if-line](https://github.com/Nioo4/comic-if-line)（public；本次原地重命名后已验证可见）
 - 匿名临时 Vercel：`BLOCKED_PLAN`，不以降低 `maxDuration` 换取假上线
-- 正式公共 Vercel URL：本次统一改名后的 production 地址将在改名部署完成后更新；改名前历史 deployment 不再作为当前交付地址。
+- 正式公共 Vercel URL：[https://comic-if-line.vercel.app](https://comic-if-line.vercel.app)（production `READY`；project `nioo4s-projects/comic-if-line`；新 immutable deployment 不作为当前用户地址）
+- 改名后公网页面复核：`BLOCKED`；当前直接 GET 命中 Vercel Deployment Protection 登录页，CLI 复核受本机连接超时影响，未声称页面 metadata 已通过。
 - Production analyze：HTTP 200，客户端 59.639s；7 facts、3 questions、0 conflicts、`canContinue=true`。branches 为服务端日志部分通过，storyboard 公网尚未验收。
 - Production protection bypass：D044 已撤销，当前查询为 `bypassCount=0`；未记录或公开任何 secret。
 - 核心路径演示视频：原 Release/tag `v0.1-demo` 及视频 asset 经用户审核不合格后删除，历史视频不再作为有效交付证据；待重新制作/`NOT_DONE`

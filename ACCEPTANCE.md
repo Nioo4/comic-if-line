@@ -1,6 +1,6 @@
 # 漫画IF线验收记录
 
-当前整体状态：尚未 Done。正式 production 已 Ready，但完整端到端公开录屏、branches 公网响应体和 storyboard 公网验收仍未完成；原核心路径演示 Release 经用户审核不合格已删除，原视频不再作为有效交付证据，演示视频交付恢复为待重新制作/`NOT_DONE`；production analyze 证据不能替代完整流程或稳定性证据。
+当前整体状态：尚未 Done。漫画IF线新名称 production 已 Ready，但匿名公网 GET 当前被 Vercel Deployment Protection 返回登录页，且本机 `vercel curl` 连接超时；完整端到端公开录屏、branches 公网响应体和 storyboard 公网验收仍未完成。原核心路径演示 Release 经用户审核不合格已删除，原视频不再作为有效交付证据，演示视频交付恢复为待重新制作/`NOT_DONE`；历史 production analyze 证据不能替代新名称完整流程或稳定性证据。
 
 - 验收开始：`2026-09-09 03:57:41 +08:00`
 - 初始收口记录时刻：`2026-09-09 08:48:25 +08:00`
@@ -38,6 +38,7 @@
 | production deployment | PASS | 本次统一命名前的 Vercel 历史部署，当前地址见下方新名称交付记录；build 31s、Node 24.x、function timeout 300s。 |
 | production 环境配置 | PASS | 已配置四个变量名：`DEEPSEEK_BASE_URL`、`DEEPSEEK_API_KEY`（sensitive）、`AI_CALL_TIMEOUT_MS`、`MAX_REQUEST_BYTES`（config）；不记录值。 |
 | production GET（agent） | PASS | 改名前历史 production alias HTTP 200，标题包含“让遗憾拥有另一条可信的路”；当前地址见下方新名称交付记录。 |
+| production GET（改名后） | BLOCKED | 当前 canonical alias 为 `https://comic-if-line.vercel.app/`；直接 HTTP 200 返回 Vercel 登录页而非应用 HTML，`vercel curl` 生成临时 bypass 后本机连接超时，未取得页面 title/中文名称证据；不据此声称公网页面验收通过。 |
 | production GET（独立复核） | PASS | 独立 HTTP 200，537ms，标题匹配。 |
 | production `/api/analyze` | PASS | 客户端 HTTP 200、59.639s；7 facts、3 questions、0 conflicts、`canContinue=true`；Vercel 服务端日志 58.736s/status 200，usage input 878 / output 3921 / total 4799。 |
 | production `/api/branches` | PARTIAL | 客户端在 142.697s 发生本地传输中断、无 HTTP 响应；Vercel 服务端日志显示 153.732s/status 200，usage input 4384 / output 12069 / total 16453。未验证公网响应体结构，不能写完整端到端 PASS；结合本地真实结构成功样本保留为服务端部分通过。 |
@@ -48,15 +49,15 @@
 
 | 交付项 | 状态 | 地址/说明 |
 | --- | --- | --- |
-| GitHub 公共仓库 | PASS | 改名前历史仓库已由本次命名决策替换；当前仓库地址见下方新名称交付记录。 |
-| GitHub 初始提交 push | PASS | `HEAD:main` 已推送；历史远端 hash 不作为最终状态，本轮文档提交完成后以 `git ls-remote origin refs/heads/main` 核验远端与本地 HEAD；未使用 force push。 |
+| GitHub 公共仓库 | PASS | [https://github.com/Nioo4/comic-if-line](https://github.com/Nioo4/comic-if-line)；已确认 `isPrivate=false`。平台保留的旧 URL redirect 属 GitHub 历史机制，不作为当前地址。 |
+| GitHub 本次重命名提交 push | PASS | `master:main` 已推送；远端 `main` 与本地 HEAD `505dbd9adcebbe13fb2aceb2782d3a7be3685014` 一致；未使用 force push。 |
 | Vercel 临时公开部署 | BLOCKED | D041 在临时 Linux 容器中 `npm ci` 和 Next build PASS，上传进度完成（约 1.8MB）；匿名远端 builder 因计划限制失败，历史临时路径不作为 production 证据。 |
 | Vercel 临时匿名部署 | BLOCKED | `BLOCKED_PLAN`：匿名计划只接受 1–60 秒，而三条 Route 固定为 `maxDuration=300`；不为假上线降低产品时限设计。 |
-| 正式 Vercel 公网部署 | PASS | 改名前历史 deployment 已 Ready；当前 production 地址见下方新名称交付记录。完整 branches/storyboard 公网验收仍未完成。 |
+| 正式 Vercel 公网部署 | PASS | Vercel project `nioo4s-projects/comic-if-line`，project id `prj_3jFl5xENw4ijm17w3qcNLDqYKv97`；新 production deployment `comic-if-line-p8u6cwgfv-nioo4s-projects.vercel.app` 为 `READY`，canonical alias 为 [https://comic-if-line.vercel.app](https://comic-if-line.vercel.app)。旧主域、旧团队域、旧 git-main 域三个显式 alias 已删除；历史 immutable deployment 不删除、不作为当前地址。完整 branches/storyboard 公网验收仍未完成。 |
 | 核心路径演示视频 | NOT_DONE | 原 `v0.1-demo` Release 及视频 asset 经用户审核不合格已删除，不再作为有效交付证据；待重新制作并重新验收。 |
 | 不超过 5 分钟完整端到端录屏 | NOT_RUN | 历史核心路径视频不等同于完整端到端演示；待重新制作并重新录制。 |
 
-用户授权后的 D043 动作已完成：link → 服务端敏感环境变量 → production deploy → 公网 GET/analyze；D044 已撤销 protection bypass；branches/storyboard 仍另行验收，当前整体仍为 `NOT_DONE`。正式授权链接不会写入文档。
+用户授权后的 D043 动作已完成：link → 服务端敏感环境变量 → production deploy；本次 D046 命名变更完成 GitHub/Vercel 原地改名和新 production deploy，公网 GET 受 Deployment Protection/本机连接阻塞，未调用真实 analyze/branches/storyboard；branches/storyboard 仍另行验收，当前整体仍为 `NOT_DONE`。正式授权链接不会写入文档。
 
 ## 安全与证据边界
 
