@@ -13,6 +13,7 @@
 - “载入自创示例”只载入仓库内自创输入，不代表模型结果或真实故事事实。
 - 输入页会说明开始分析的三项最低标准：背景、遗憾及原因、至少一条具体的“IF 线必须实现的结果”。没有字符数硬门槛，页面按结构性非空实时显示缺项；偏好、约束和余韵可留空，空白附加行会被忽略。
 - 最低检查通过只代表可以开始分析，信息缺口会在 analyze 后由 1—3 个问题继续补齐；请求发出后的模型/网络/内部错误会明确标注为服务失败，不等同于输入不完整。
+- IF 线的必达目标不一定要改变原作最终结果：用户可以接受原结果，只要求重写导致结果的连续因果过程；目标仍须具体、可检查。
 
 ## 本地启动
 
@@ -56,17 +57,17 @@ npm run build
 npm run eval
 ```
 
-`npm run eval` 只验证不依赖模型的请求边界、结构契约、规则和调用预算，不冒充真实浏览器或真实模型验收。当前真实 branches 仅有 1 次成功和 1 次失败样本，不能据此宣称端到端稳定。
+`npm run eval` 只验证不依赖模型的请求边界、结构契约、规则和调用预算，不冒充真实浏览器或真实模型验收。D048 已补充一次真实 production Chromium 从输入到六格的完整页面样本，但单次成功不代表端到端稳定、文学质量或原作准确性。
 
-完整的真实验收证据见 [ACCEPTANCE.md](./ACCEPTANCE.md)。匿名临时 Vercel 部署仍为 `BLOCKED_PLAN`（匿名计划限制 1–60 秒，应用 Route 固定 `maxDuration=300`）；正式 production 已 Ready，但完整 branches/storyboard 公网验收仍未完成。原核心路径视频曾被发布，但经用户审核不合格后已删除，不再作为有效交付证据；production analyze 只覆盖部分路径，不代表完整端到端或稳定性验收，演示视频交付恢复为待重新制作/`NOT_DONE`；当前整体仍为 `NOT_DONE`。
+完整的真实验收证据见 [ACCEPTANCE.md](./ACCEPTANCE.md)。匿名临时 Vercel 部署仍为 `BLOCKED_PLAN`（匿名计划限制 1–60 秒，应用 Route 固定 `maxDuration=300`）；正式 production 已 Ready，D048 已用一条连续真实 Chromium 页面序列跑通 analyze、事实确认、branches 和 storyboard 六格，但稳定性、文学质量、原作准确性和完整录屏仍未完成。原核心路径视频曾被发布，但经用户审核不合格后已删除，不再作为有效交付证据；演示视频交付恢复为待重新制作/`NOT_DONE`；当前整体仍为 `NOT_DONE`。
 
 ## 交付链接
 
 - GitHub 仓库 URL：[https://github.com/Nioo4/comic-if-line](https://github.com/Nioo4/comic-if-line)（public；本次原地重命名后已验证可见）
 - 匿名临时 Vercel：`BLOCKED_PLAN`，不以降低 `maxDuration` 换取假上线
 - 正式公共 Vercel URL：[https://comic-if-line.vercel.app](https://comic-if-line.vercel.app)（production `READY`；project `nioo4s-projects/comic-if-line`；新 immutable deployment 不作为当前用户地址）
-- 改名后公网页面复核：`PASS`；永久 project domain 配置后由主 Agent 独立复核匿名 GET 为 HTTP 200，最终 URI 仍为 `https://comic-if-line.vercel.app/`，HTML title 为“漫画IF线”，包含产品名称且不是 Vercel 登录页。该证据只覆盖页面 GET；新名称 analyze/branches/storyboard 尚未调用。
-- Production analyze：HTTP 200，客户端 59.639s；7 facts、3 questions、0 conflicts、`canContinue=true`。branches 为服务端日志部分通过，storyboard 公网尚未验收。
+- 改名后公网页面复核：`PASS`；永久 project domain 配置后由主 Agent 独立复核匿名 GET 为 HTTP 200，最终 URI 仍为 `https://comic-if-line.vercel.app/`，HTML title 为“漫画IF线”，包含产品名称且不是 Vercel 登录页。该证据只覆盖页面 GET；D048 另有完整页面链路证据。
+- D048 production 单一连续真实 Chromium 页面链路（Luna Max 子 Agent 在隔离 Chromium 中执行，主 Agent 复核页面证据、最终截图与 Vercel 同序列日志）：analyze 200/32.434s，录入用户已确认答案后 deliberate re-analyze 200/47.051s，branches 200/143.899s，storyboard 200/58.776s，业务重试 0；初始 3 questions/7 facts/0 conflicts，最终 3 questions/6 facts/0 conflicts；3 candidates/2 rejected，按预设验收规则选择“延迟斩击由胜利宣告触发”，最终六格 `phase04`、01—06、合规摘要。页面 error banner/page errors/API failures 均为 0；另有一个未精确定位的非阻断静态资源 console 404。该单样本不代表稳定性或文学质量/原作准确性。
 - Production protection bypass：D044 已撤销，当前查询为 `bypassCount=0`；未记录或公开任何 secret。
 - 核心路径演示视频：原 Release/tag `v0.1-demo` 及视频 asset 经用户审核不合格后删除，历史视频不再作为有效交付证据；待重新制作/`NOT_DONE`
 - 不超过 5 分钟完整端到端录屏：待重新制作并重新验收；production 已部署但历史核心路径视频不替代完整流程
