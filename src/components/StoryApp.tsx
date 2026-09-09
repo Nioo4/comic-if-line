@@ -589,7 +589,7 @@ export default function StoryApp() {
     <main className="app-shell">
       <header className="app-header">
         <div>
-          <p className="eyebrow">意难平 IF · 约束感故事工作台</p>
+          <p className="eyebrow">漫画IF线 · 约束感故事工作台</p>
           <h1>让遗憾拥有另一条可信的路</h1>
           <p className="intro">
             把想保留的结果、不能破坏的事实和愿意承担的代价写下来，再让模型在边界内寻找分岔。

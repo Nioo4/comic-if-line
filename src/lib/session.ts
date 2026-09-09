@@ -4,7 +4,7 @@ import {
   type SessionSnapshot,
 } from "./contracts.ts";
 
-export const SESSION_STORAGE_KEY = "yinanping-if:v1";
+export const SESSION_STORAGE_KEY = "comic-if-line:v1";
 
 export function serializeSession(input: unknown): string | null {
   const snapshot = SessionSnapshotSchema.safeParse(input);

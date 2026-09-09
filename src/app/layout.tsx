@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "意难平 IF",
+  title: "漫画IF线",
   description: "在锁定事实与约束内寻找另一条可信的故事分支",
 };
 

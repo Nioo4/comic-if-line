@@ -464,7 +464,7 @@ export type SessionSnapshot = z.infer<typeof SessionSnapshotSchema>;
 
 export const SessionEnvelopeSchema = z
   .object({
-    version: z.literal("yinanping-if:v1"),
+    version: z.literal("comic-if-line:v1"),
     snapshot: SessionSnapshotSchema,
   })
   .strict();

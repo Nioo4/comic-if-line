@@ -1,6 +1,6 @@
-# 意难平 IF
+# 漫画IF线
 
-意难平 IF 是一个约束感故事分支工作台：用户先写下背景、遗憾、必须保留的结果和不能破坏的约束，再逐步核对事实、选择分支，最后生成固定六格的中文故事草稿。当前实现使用 DeepSeek `deepseek-v4-pro` 的 OpenAI-compatible Responses API，并由服务端完成结构化输出、Zod 校验和确定性规则检查。
+漫画IF线是一个约束感故事分支工作台：用户先写下背景、遗憾、必须保留的结果和不能破坏的约束，再逐步核对事实、选择分支，最后生成固定六格的中文故事草稿。当前实现使用 DeepSeek `deepseek-v4-pro` 的 OpenAI-compatible Responses API，并由服务端完成结构化输出、Zod 校验和确定性规则检查。
 
 ## 当前实现
 
@@ -9,7 +9,7 @@
 - 分支阶段固定生成 5 个内部骨架，经两批并行审查后展示 1–3 条候选。
 - 成稿阶段固定六格顺序：原始张力、分歧触发、不同选择、行动与代价、改变后的结果、情绪余韵。
 - `workTitle` 只用于页面展示，不进入任何 API 请求。
-- 浏览器只保存 `yinanping-if:v1` 会话快照，不保存 API key；“清除本次会话”会移除该快照。
+- 浏览器只保存 `comic-if-line:v1` 会话快照，不保存 API key；“清除本次会话”会移除该快照。
 - “载入自创示例”只载入仓库内自创输入，不代表模型结果或真实故事事实。
 
 ## 本地启动
@@ -60,9 +60,9 @@ npm run eval
 
 ## 交付链接
 
-- GitHub 仓库 URL：[https://github.com/Nioo4/yinanping-if](https://github.com/Nioo4/yinanping-if)（public 仓库与首个提交已验证可见）
+- GitHub 仓库 URL：本次统一改名后的公共仓库地址将在改名完成后更新。
 - 匿名临时 Vercel：`BLOCKED_PLAN`，不以降低 `maxDuration` 换取假上线
-- 正式公共 Vercel URL：[https://yinanping-if.vercel.app](https://yinanping-if.vercel.app)（production Ready；不可变 deployment：[https://yinanping-fxjla9y1f-nioo4s-projects.vercel.app](https://yinanping-fxjla9y1f-nioo4s-projects.vercel.app)）
+- 正式公共 Vercel URL：本次统一改名后的 production 地址将在改名部署完成后更新；改名前历史 deployment 不再作为当前交付地址。
 - Production analyze：HTTP 200，客户端 59.639s；7 facts、3 questions、0 conflicts、`canContinue=true`。branches 为服务端日志部分通过，storyboard 公网尚未验收。
 - Production protection bypass：D044 已撤销，当前查询为 `bypassCount=0`；未记录或公开任何 secret。
 - 核心路径演示视频：原 Release/tag `v0.1-demo` 及视频 asset 经用户审核不合格后删除，历史视频不再作为有效交付证据；待重新制作/`NOT_DONE`

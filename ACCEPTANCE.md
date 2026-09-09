@@ -1,4 +1,4 @@
-# 意难平 IF 验收记录
+# 漫画IF线验收记录
 
 当前整体状态：尚未 Done。正式 production 已 Ready，但完整端到端公开录屏、branches 公网响应体和 storyboard 公网验收仍未完成；原核心路径演示 Release 经用户审核不合格已删除，原视频不再作为有效交付证据，演示视频交付恢复为待重新制作/`NOT_DONE`；production analyze 证据不能替代完整流程或稳定性证据。
 
@@ -35,9 +35,9 @@
 | 第二次真实端到端录屏 | FAIL | `/api/analyze` PASS：24.254s，usage input 879 / output 2211 / total 3090；随后 `/api/branches` 在 179.971s 返回 HTTP 502，usage input 1344 / output 3073 / total 4417，前端未进入候选页；录屏已终止，不作为成功演示。 |
 | branches 稳定性样本汇总 | FAIL | 当前有 1 次成功、1 次失败（成功率样本 1/2），不足以宣称端到端稳定；失败路径按安全错误语义返回 502 属产品安全失败行为 PASS。 |
 | 核心路径演示视频（历史证据，已失效） | INVALIDATED | 原 `v0.1-demo` Release/asset 曾记录 48.60s、3,532,816 bytes；范围仅为载入自创示例 → 真实 analyze → 上下文确认，真实 analyze 49.155s、factCards=6、questionCards=3、consoleError=0，不覆盖 branches/storyboard。2026-09-09 经用户审核不合格已删除 Release 及 asset，历史数据保留但不再作为有效交付证据；演示视频交付恢复为待重新制作/`NOT_DONE`。 |
-| production deployment | PASS | Vercel project `nioo4s-projects/yinanping-if`，owner `nioo4`；target `production`、`readyState=READY`；不可变 URL：[https://yinanping-fxjla9y1f-nioo4s-projects.vercel.app](https://yinanping-fxjla9y1f-nioo4s-projects.vercel.app)，production alias：[https://yinanping-if.vercel.app](https://yinanping-if.vercel.app)；build 31s、Node 24.x、function timeout 300s。 |
+| production deployment | PASS | 本次统一命名前的 Vercel 历史部署，当前地址见下方新名称交付记录；build 31s、Node 24.x、function timeout 300s。 |
 | production 环境配置 | PASS | 已配置四个变量名：`DEEPSEEK_BASE_URL`、`DEEPSEEK_API_KEY`（sensitive）、`AI_CALL_TIMEOUT_MS`、`MAX_REQUEST_BYTES`（config）；不记录值。 |
-| production GET（agent） | PASS | `https://yinanping-if.vercel.app/` HTTP 200，标题包含“让遗憾拥有另一条可信的路”。 |
+| production GET（agent） | PASS | 改名前历史 production alias HTTP 200，标题包含“让遗憾拥有另一条可信的路”；当前地址见下方新名称交付记录。 |
 | production GET（独立复核） | PASS | 独立 HTTP 200，537ms，标题匹配。 |
 | production `/api/analyze` | PASS | 客户端 HTTP 200、59.639s；7 facts、3 questions、0 conflicts、`canContinue=true`；Vercel 服务端日志 58.736s/status 200，usage input 878 / output 3921 / total 4799。 |
 | production `/api/branches` | PARTIAL | 客户端在 142.697s 发生本地传输中断、无 HTTP 响应；Vercel 服务端日志显示 153.732s/status 200，usage input 4384 / output 12069 / total 16453。未验证公网响应体结构，不能写完整端到端 PASS；结合本地真实结构成功样本保留为服务端部分通过。 |
@@ -48,11 +48,11 @@
 
 | 交付项 | 状态 | 地址/说明 |
 | --- | --- | --- |
-| GitHub 公共仓库 | PASS | `https://github.com/Nioo4/yinanping-if`；2026-09-09 08:07:22 +08:00 创建并确认 `isPrivate=false`。 |
+| GitHub 公共仓库 | PASS | 改名前历史仓库已由本次命名决策替换；当前仓库地址见下方新名称交付记录。 |
 | GitHub 初始提交 push | PASS | `HEAD:main` 已推送；历史远端 hash 不作为最终状态，本轮文档提交完成后以 `git ls-remote origin refs/heads/main` 核验远端与本地 HEAD；未使用 force push。 |
 | Vercel 临时公开部署 | BLOCKED | D041 在临时 Linux 容器中 `npm ci` 和 Next build PASS，上传进度完成（约 1.8MB）；匿名远端 builder 因计划限制失败，历史临时路径不作为 production 证据。 |
 | Vercel 临时匿名部署 | BLOCKED | `BLOCKED_PLAN`：匿名计划只接受 1–60 秒，而三条 Route 固定为 `maxDuration=300`；不为假上线降低产品时限设计。 |
-| 正式 Vercel 公网部署 | PASS | `https://yinanping-if.vercel.app` 已 Ready；production deployment 与公网 analyze 证据已记录。完整 branches/storyboard 公网验收仍未完成。 |
+| 正式 Vercel 公网部署 | PASS | 改名前历史 deployment 已 Ready；当前 production 地址见下方新名称交付记录。完整 branches/storyboard 公网验收仍未完成。 |
 | 核心路径演示视频 | NOT_DONE | 原 `v0.1-demo` Release 及视频 asset 经用户审核不合格已删除，不再作为有效交付证据；待重新制作并重新验收。 |
 | 不超过 5 分钟完整端到端录屏 | NOT_RUN | 历史核心路径视频不等同于完整端到端演示；待重新制作并重新录制。 |
 

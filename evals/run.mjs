@@ -808,7 +808,7 @@ delete legacySnapshot.analysis;
 delete legacySnapshot.questionSuggestions;
 delete legacySnapshot.retryKind;
 assert.equal(
-  restoreSession(JSON.stringify({ version: "yinanping-if:v1", snapshot: legacySnapshot })),
+  restoreSession(JSON.stringify({ version: "comic-if-line:v1", snapshot: legacySnapshot })),
   null,
 );
 assert.equal(
