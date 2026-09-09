@@ -1,0 +1,110 @@
+[
+  {
+    "id": "C01",
+    "name": "完整信息",
+    "input": {
+      "plotContext": "旧剧院闭馆前，岚舟准备把钥匙交给管理人。",
+      "regret": "他没有在最后一场演出后向澄夏解释离开的原因。",
+      "mustHaves": [{ "id": "c01-m1", "text": "两人当面说出真正的离开原因" }],
+      "preferences": [{ "id": "c01-p1", "text": "结尾保留未完待续的余韵" }],
+      "constraints": [{ "id": "c01-c1", "text": "澄夏不能提前知道管理人已经决定拆除剧院" }]
+    },
+    "expectedChecks": ["valid_intent", "no_required_clarification", "five_skeletons", "one_to_three_candidates", "six_panels"]
+  },
+  {
+    "id": "C02",
+    "name": "信息缺口继续",
+    "input": {
+      "plotContext": "海边旅馆的清晨，闻溪收拾好一封没有寄出的信。",
+      "regret": "她和季衡在误会最深时选择沉默。",
+      "mustHaves": [{ "id": "c02-m1", "text": "他们有一次诚实的对话" }],
+      "preferences": [],
+      "constraints": []
+    },
+    "expectedChecks": ["valid_intent", "one_to_three_questions", "assumption_can_continue"]
+  },
+  {
+    "id": "C03",
+    "name": "硬冲突与最终调整冲突",
+    "input": {
+      "plotContext": "雪停后的医院走廊，简宁守着一扇亮着灯的门。",
+      "regret": "她当时没有说出自己已经答应离开。",
+      "mustHaves": [{ "id": "c03-m1", "text": "简宁必须当晚离开医院" }],
+      "preferences": [],
+      "constraints": [{ "id": "c03-c1", "text": "简宁必须在当晚留在医院，不能离开" }]
+    },
+    "expectedChecks": ["hard_conflict_is_explicit", "continue_disabled_until_input_changes", "final_adjustment_conflict_returns_409", "conflict_has_no_panels", "no_critic_or_repair"]
+  },
+  {
+    "id": "C04",
+    "name": "知识泄漏",
+    "input": {
+      "plotContext": "渡船启航前，洛寻在甲板上等一位迟到的朋友。",
+      "regret": "他没有在误会发生前问清对方为何失约。",
+      "mustHaves": [{ "id": "c04-m1", "text": "洛寻先询问而不是直接指责" }],
+      "preferences": [],
+      "constraints": [{ "id": "c04-c1", "text": "洛寻不能知道朋友藏在货舱里的秘密" }]
+    },
+    "expectedChecks": ["knowledge_boundary_is_visible", "leaking_candidate_is_rejected_as_hard_failure"]
+  },
+  {
+    "id": "C05",
+    "name": "人物失真",
+    "input": {
+      "plotContext": "棋馆关门后，谨慎的闻砚发现桌上留着一枚旧棋子。",
+      "regret": "他过去总用沉默代替道歉。",
+      "mustHaves": [{ "id": "c05-m1", "text": "闻砚采取符合谨慎性格的小步行动" }],
+      "preferences": [],
+      "constraints": [{ "id": "c05-c1", "text": "闻砚不能突然做出无动机的公开表白" }]
+    },
+    "expectedChecks": ["motivation_is_traceable", "personality_breaking_candidate_is_rejected_as_hard_failure"]
+  },
+  {
+    "id": "C06",
+    "name": "凭空道具",
+    "input": {
+      "plotContext": "旧邮局的储物柜前，芮安只带着一张褪色的取件单。",
+      "regret": "她没有在离开前确认那封信是否真的寄出。",
+      "mustHaves": [{ "id": "c06-m1", "text": "行动只能依靠已出现的取件单" }],
+      "preferences": [],
+      "constraints": [{ "id": "c06-c1", "text": "不能突然出现未披露的钥匙或录音" }]
+    },
+    "expectedChecks": ["undisclosed_prop_is_rejected", "new_assumption_requires_explicit_trace"]
+  },
+  {
+    "id": "C07",
+    "name": "十条以上约束",
+    "input": {
+      "plotContext": "山城末班缆车发车前，照相师宁野准备归还一台旧相机。",
+      "regret": "他没有及时告诉搭档照片底片已经受潮。",
+      "mustHaves": [{ "id": "c07-m1", "text": "宁野必须说明底片受潮" }],
+      "preferences": [],
+      "constraints": [
+        { "id": "c07-c1", "text": "故事发生在末班缆车前" },
+        { "id": "c07-c2", "text": "宁野不会修复底片" },
+        { "id": "c07-c3", "text": "搭档不知道底片受潮" },
+        { "id": "c07-c4", "text": "旧相机不能凭空升级" },
+        { "id": "c07-c5", "text": "不能出现超自然能力" },
+        { "id": "c07-c6", "text": "宁野仍需归还相机" },
+        { "id": "c07-c7", "text": "缆车不会因他们争执而停运" },
+        { "id": "c07-c8", "text": "搭档没有读心能力" },
+        { "id": "c07-c9", "text": "底片损坏有现实代价" },
+        { "id": "c07-c10", "text": "两人不能无理由和好" },
+        { "id": "c07-c11", "text": "结尾保留一项未解决的损失" }
+      ]
+    },
+    "expectedChecks": ["all_eleven_constraints_preserved", "no_business_constraint_count_cap", "coverage_is_traceable"]
+  },
+  {
+    "id": "C08",
+    "name": "大请求与 API 失败",
+    "input": {
+      "plotContext": "一座临海灯塔的值班室里，值班员等待换班。",
+      "regret": "他没有在风暴前交接那本航海日志。",
+      "mustHaves": [{ "id": "c08-m1", "text": "交接日志的责任被清楚说明" }],
+      "preferences": [],
+      "constraints": []
+    },
+    "expectedChecks": ["utf8_payload_over_100000_returns_413_without_truncation", "timeout_or_rate_limit_maps_to_safe_error", "invalid_output_maps_to_model_output_invalid", "last_stable_state_is_preserved"]
+  }
+]

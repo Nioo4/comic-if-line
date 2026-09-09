@@ -1,0 +1,23 @@
+node_modules/
+.next/
+out/
+coverage/
+*.tsbuildinfo
+.vercel/
+acceptance-artifacts/
+
+# Local environment and secret material. Keep the non-secret template tracked.
+.env
+.env.*
+!.env.example
+api.txt
+**/api.txt
+*.key
+*.pem
+*.secret
+secrets/
+
+# Local tooling and OS files.
+*.log
+.DS_Store
+Thumbs.db

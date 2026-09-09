@@ -1,0 +1,16 @@
+node_modules/
+.git/
+.next/
+out/
+coverage/
+*.tsbuildinfo
+acceptance-artifacts/
+.env
+.env.*
+!.env.example
+api.txt
+**/api.txt
+*.key
+*.pem
+*.secret
+secrets/
